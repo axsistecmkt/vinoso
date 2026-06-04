@@ -1,0 +1,1301 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vinoso — El vino sin snobismo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Caveat:wght@400;600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ─── RESET & BASE ─────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --purple:    #4A2C6E;
+      --purple-mid:#7B4FA6;
+      --lavender:  #E8E0F0;
+      --cream:     #F5F0E8;
+      --text:      #2D1B3D;
+      --red:       #C13B4F;
+      --white:     #FFFFFF;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Lato', sans-serif;
+      color: var(--text);
+      background: var(--cream);
+      overflow-x: hidden;
+    }
+
+    img { display: block; max-width: 100%; }
+
+    /* ─── TYPOGRAPHY ───────────────────────────────────────────── */
+    .t-serif   { font-family: 'Playfair Display', serif; }
+    .t-script  { font-family: 'Caveat', cursive; }
+
+    h1, h2, h3 { font-family: 'Playfair Display', serif; line-height: 1.15; }
+
+    /* ─── UTILITY ──────────────────────────────────────────────── */
+    .section-wrap { width: 100%; max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+    .btn {
+      display: inline-block;
+      font-family: 'Lato', sans-serif;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      font-size: .85rem;
+      padding: 14px 34px;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: transform .2s, box-shadow .2s;
+      text-decoration: none;
+      border: none;
+    }
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(74,44,110,.25); }
+
+    .btn-primary {
+      background: var(--purple);
+      color: var(--white);
+    }
+    .btn-outline {
+      background: transparent;
+      color: var(--purple);
+      border: 2px solid var(--purple);
+    }
+    .btn-red {
+      background: var(--red);
+      color: var(--white);
+    }
+    .btn-white {
+      background: var(--white);
+      color: var(--purple);
+    }
+
+    /* ─── SCROLL FADE-IN ───────────────────────────────────────── */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity .7s ease, transform .7s ease;
+    }
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       NAV
+    ═══════════════════════════════════════════════════════════ */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: rgba(245,240,232,.96);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid rgba(74,44,110,.1);
+      transition: box-shadow .3s;
+    }
+    nav.scrolled { box-shadow: 0 2px 20px rgba(74,44,110,.12); }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px;
+      height: 70px;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+    .nav-logo img { height: 48px; width: 48px; object-fit: contain; }
+    .nav-logo-text {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 1.3rem;
+      color: var(--purple);
+      letter-spacing: .02em;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+    .nav-links a {
+      font-family: 'Lato', sans-serif;
+      font-size: .9rem;
+      font-weight: 700;
+      letter-spacing: .05em;
+      color: var(--text);
+      text-decoration: none;
+      text-transform: uppercase;
+      position: relative;
+      transition: color .2s;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -3px; left: 0;
+      width: 0; height: 2px;
+      background: var(--purple);
+      transition: width .3s;
+    }
+    .nav-links a:hover { color: var(--purple); }
+    .nav-links a:hover::after { width: 100%; }
+
+    .nav-toggle {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 4px;
+    }
+    .nav-toggle span {
+      display: block;
+      width: 26px; height: 2px;
+      background: var(--purple);
+      border-radius: 2px;
+      transition: transform .3s, opacity .3s;
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       HERO
+    ═══════════════════════════════════════════════════════════ */
+    #hero {
+      min-height: 100vh;
+      background: var(--lavender);
+      display: flex;
+      align-items: center;
+      padding-top: 70px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-deco {
+      position: absolute;
+      pointer-events: none;
+      mix-blend-mode: multiply;
+      opacity: .18;
+    }
+    .hero-deco-1 {
+      bottom: -20px; right: -30px;
+      width: 340px;
+      transform: rotate(12deg);
+    }
+    .hero-deco-2 {
+      top: 100px; right: 6%;
+      width: 220px;
+      transform: rotate(-8deg);
+      opacity: .13;
+    }
+    .hero-deco-3 {
+      bottom: 60px; left: -10px;
+      width: 180px;
+      transform: rotate(20deg);
+      opacity: .10;
+    }
+
+    .hero-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 80px 24px 80px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+
+    .hero-text { position: relative; }
+
+    .hero-tag {
+      font-family: 'Caveat', cursive;
+      font-size: 1.25rem;
+      color: var(--purple-mid);
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    .hero-h1 {
+      font-size: clamp(2rem, 4.5vw, 3.4rem);
+      color: var(--purple);
+      margin-bottom: 24px;
+      line-height: 1.1;
+    }
+
+    .hero-sub {
+      font-family: 'Caveat', cursive;
+      font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+      color: var(--purple-mid);
+      margin-bottom: 36px;
+      line-height: 1.4;
+    }
+
+    .hero-ctas { display: flex; gap: 16px; flex-wrap: wrap; }
+
+    .hero-visual {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .hero-ilus {
+      width: 100%;
+      max-width: 460px;
+      border-radius: 24px;
+      filter: drop-shadow(0 12px 40px rgba(74,44,110,.15));
+    }
+
+    /* Wavy underline on headline word */
+    .wavy {
+      position: relative;
+      display: inline;
+    }
+    .wavy::after {
+      content: '';
+      position: absolute;
+      left: 0; bottom: -6px;
+      width: 100%; height: 6px;
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 8'%3E%3Cpath d='M0 4 Q15 0 30 4 Q45 8 60 4 Q75 0 90 4 Q105 8 120 4' stroke='%237B4FA6' stroke-width='2.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") repeat-x left center / 120px 8px;
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       QUÉ ES VINOSO
+    ═══════════════════════════════════════════════════════════ */
+    #nosotros {
+      background: var(--cream);
+      padding: 100px 0;
+    }
+
+    .nosotros-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 70px;
+      align-items: center;
+    }
+
+    .nosotros-label {
+      font-family: 'Caveat', cursive;
+      font-size: 1.1rem;
+      color: var(--purple-mid);
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .nosotros-h2 {
+      font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+      color: var(--purple);
+      margin-bottom: 28px;
+    }
+
+    .nosotros-body {
+      font-size: 1.1rem;
+      line-height: 1.8;
+      color: var(--text);
+      margin-bottom: 36px;
+    }
+
+    .nosotros-pills {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: var(--lavender);
+      color: var(--purple);
+      font-family: 'Lato', sans-serif;
+      font-size: .85rem;
+      font-weight: 700;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      padding: 8px 18px;
+      border-radius: 50px;
+    }
+    .pill img { width: 22px; height: 22px; object-fit: contain; mix-blend-mode: multiply; }
+
+    .nosotros-visual {
+      position: relative;
+    }
+    .nosotros-ilus-main {
+      width: 100%;
+      border-radius: 20px;
+      filter: drop-shadow(0 8px 30px rgba(74,44,110,.12));
+    }
+    .nosotros-ilus-float {
+      position: absolute;
+      bottom: -30px; left: -40px;
+      width: 130px;
+      mix-blend-mode: multiply;
+      transform: rotate(-12deg);
+      opacity: .7;
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       MANUAL
+    ═══════════════════════════════════════════════════════════ */
+    #manual {
+      background: var(--purple);
+      padding: 100px 0 80px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .manual-deco {
+      position: absolute;
+      opacity: .07;
+      pointer-events: none;
+    }
+    .manual-deco-1 { top: -40px; right: -60px; width: 350px; filter: invert(1); }
+    .manual-deco-2 { bottom: -60px; left: -40px; width: 280px; filter: invert(1); }
+
+    .manual-header {
+      text-align: center;
+      margin-bottom: 60px;
+      position: relative;
+    }
+    .manual-label {
+      font-family: 'Caveat', cursive;
+      font-size: 1.2rem;
+      color: rgba(232,224,240,.75);
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 8px;
+    }
+    .manual-h2 {
+      font-size: clamp(2rem, 4vw, 3rem);
+      color: var(--white);
+      margin-bottom: 12px;
+    }
+    .manual-sub {
+      font-family: 'Caveat', cursive;
+      font-size: clamp(1.15rem, 2.5vw, 1.55rem);
+      color: #D4B8E0;
+      margin-bottom: 20px;
+    }
+    .manual-desc {
+      font-size: 1.05rem;
+      color: rgba(255,255,255,.8);
+      max-width: 640px;
+      margin: 0 auto;
+      line-height: 1.75;
+    }
+
+    /* Chapter grid */
+    .chapters-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 16px;
+      margin-bottom: 60px;
+    }
+
+    .chapter-card {
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: 16px;
+      padding: 24px 20px 20px;
+      transition: background .25s, transform .25s;
+      position: relative;
+      overflow: hidden;
+    }
+    .chapter-card:hover {
+      background: rgba(255,255,255,.15);
+      transform: translateY(-4px);
+    }
+    .chapter-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--purple-mid), #D4B8E0);
+    }
+
+    .chapter-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.5rem;
+      font-weight: 900;
+      color: rgba(255,255,255,.15);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .chapter-icon {
+      width: 52px; height: 52px;
+      object-fit: contain;
+      filter: invert(1) brightness(2);
+      margin-bottom: 10px;
+      opacity: .85;
+    }
+    .chapter-title {
+      font-family: 'Lato', sans-serif;
+      font-size: .9rem;
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1.4;
+    }
+    .chapter-cap {
+      font-family: 'Caveat', cursive;
+      font-size: .95rem;
+      color: rgba(212,184,224,.8);
+      margin-bottom: 6px;
+    }
+
+    /* CTA form inside manual */
+    .manual-cta {
+      background: rgba(255,255,255,.1);
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 20px;
+      padding: 40px 36px;
+      max-width: 640px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .manual-cta h3 {
+      font-size: 1.6rem;
+      color: var(--white);
+      margin-bottom: 8px;
+    }
+    .manual-cta p {
+      font-family: 'Caveat', cursive;
+      font-size: 1.2rem;
+      color: #D4B8E0;
+      margin-bottom: 28px;
+    }
+    .form-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .form-row input {
+      flex: 1;
+      min-width: 160px;
+      padding: 14px 18px;
+      border-radius: 50px;
+      border: none;
+      font-family: 'Lato', sans-serif;
+      font-size: .95rem;
+      background: rgba(255,255,255,.95);
+      color: var(--text);
+      outline: none;
+    }
+    .form-row input:focus { box-shadow: 0 0 0 3px rgba(212,184,224,.5); }
+    .form-row input::placeholder { color: #999; }
+    .form-success {
+      display: none;
+      font-family: 'Caveat', cursive;
+      font-size: 1.4rem;
+      color: #D4B8E0;
+      padding: 20px;
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       EVENTOS
+    ═══════════════════════════════════════════════════════════ */
+    #eventos {
+      background: var(--cream);
+      padding: 100px 0;
+    }
+
+    .eventos-header {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+      margin-bottom: 60px;
+    }
+
+    .eventos-text .label-script {
+      font-family: 'Caveat', cursive;
+      font-size: 1.15rem;
+      color: var(--purple-mid);
+      letter-spacing: .06em;
+    }
+    .eventos-h2 {
+      font-size: clamp(1.9rem, 3.8vw, 3rem);
+      color: var(--purple);
+      margin: 8px 0 16px;
+    }
+    .eventos-body {
+      font-size: 1.05rem;
+      line-height: 1.8;
+      color: var(--text);
+      margin-bottom: 32px;
+    }
+
+    .eventos-form {
+      display: flex;
+      gap: 12px;
+      max-width: 420px;
+    }
+    .eventos-form input {
+      flex: 1;
+      padding: 14px 20px;
+      border-radius: 50px;
+      border: 2px solid var(--purple);
+      font-family: 'Lato', sans-serif;
+      font-size: .95rem;
+      background: var(--white);
+      color: var(--text);
+      outline: none;
+    }
+    .eventos-form input:focus { box-shadow: 0 0 0 3px rgba(74,44,110,.15); }
+
+    .eventos-visual { position: relative; }
+    .eventos-ilus {
+      width: 100%;
+      border-radius: 20px;
+      filter: drop-shadow(0 8px 30px rgba(74,44,110,.12));
+    }
+
+    /* Placeholder cards */
+    .eventos-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    .evento-card {
+      background: var(--white);
+      border-radius: 20px;
+      padding: 36px 24px 28px;
+      text-align: center;
+      border: 1.5px solid var(--lavender);
+      transition: transform .25s, box-shadow .25s;
+      position: relative;
+      overflow: hidden;
+    }
+    .evento-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 4px;
+      background: var(--purple);
+      transform: scaleX(0);
+      transition: transform .3s;
+    }
+    .evento-card:hover { transform: translateY(-6px); box-shadow: 0 16px 40px rgba(74,44,110,.12); }
+    .evento-card:hover::after { transform: scaleX(1); }
+
+    .evento-card-icon {
+      width: 80px; height: 80px;
+      object-fit: contain;
+      margin: 0 auto 16px;
+      mix-blend-mode: multiply;
+    }
+    .evento-card h3 {
+      font-size: 1.25rem;
+      color: var(--purple);
+      margin-bottom: 10px;
+    }
+    .evento-card p {
+      font-size: .9rem;
+      color: #6B5B7B;
+      line-height: 1.6;
+    }
+    .evento-soon {
+      display: inline-block;
+      margin-top: 16px;
+      font-family: 'Caveat', cursive;
+      font-size: 1rem;
+      color: var(--purple-mid);
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       COMUNIDAD
+    ═══════════════════════════════════════════════════════════ */
+    #comunidad {
+      background: var(--lavender);
+      padding: 100px 0;
+    }
+
+    .comunidad-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 70px;
+      align-items: center;
+    }
+
+    .comunidad-label {
+      font-family: 'Caveat', cursive;
+      font-size: 2rem;
+      color: var(--purple);
+      font-weight: 700;
+      display: block;
+      margin-bottom: 16px;
+    }
+    .comunidad-h2 {
+      font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+      color: var(--purple);
+      margin-bottom: 20px;
+    }
+    .comunidad-body {
+      font-size: 1.05rem;
+      line-height: 1.8;
+      color: var(--text);
+      margin-bottom: 36px;
+    }
+
+    .social-icons {
+      display: flex;
+      gap: 16px;
+    }
+    .social-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 22px;
+      border-radius: 50px;
+      font-family: 'Lato', sans-serif;
+      font-size: .88rem;
+      font-weight: 700;
+      letter-spacing: .04em;
+      text-decoration: none;
+      border: 2px solid var(--purple);
+      color: var(--purple);
+      transition: background .2s, color .2s, transform .2s;
+    }
+    .social-btn:hover {
+      background: var(--purple);
+      color: var(--white);
+      transform: translateY(-2px);
+    }
+    .social-btn svg { width: 20px; height: 20px; }
+
+    .comunidad-visual { position: relative; }
+    .comunidad-ilus {
+      width: 100%;
+      border-radius: 20px;
+      filter: drop-shadow(0 8px 30px rgba(74,44,110,.12));
+    }
+    .comunidad-float-icon {
+      position: absolute;
+      top: -20px; right: -20px;
+      width: 100px;
+      mix-blend-mode: multiply;
+      transform: rotate(15deg);
+      opacity: .6;
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       FOOTER
+    ═══════════════════════════════════════════════════════════ */
+    footer {
+      background: var(--purple);
+      padding: 64px 24px 40px;
+      text-align: center;
+    }
+
+    .footer-logo {
+      width: 80px; height: 80px;
+      object-fit: contain;
+      margin: 0 auto 16px;
+      filter: brightness(0) invert(1);
+    }
+    .footer-brand {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem;
+      color: var(--white);
+      margin-bottom: 4px;
+    }
+    .footer-url {
+      font-family: 'Lato', sans-serif;
+      font-size: .9rem;
+      color: rgba(255,255,255,.55);
+      margin-bottom: 32px;
+      letter-spacing: .06em;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 32px;
+      list-style: none;
+      margin-bottom: 32px;
+    }
+    .footer-links a {
+      font-size: .85rem;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.65);
+      text-decoration: none;
+      transition: color .2s;
+    }
+    .footer-links a:hover { color: var(--white); }
+
+    .footer-social {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-bottom: 36px;
+    }
+    .footer-social a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(255,255,255,.3);
+      color: rgba(255,255,255,.7);
+      text-decoration: none;
+      transition: background .2s, color .2s, border-color .2s;
+    }
+    .footer-social a:hover {
+      background: rgba(255,255,255,.12);
+      border-color: rgba(255,255,255,.7);
+      color: var(--white);
+    }
+    .footer-social svg { width: 18px; height: 18px; }
+
+    .footer-tagline {
+      font-family: 'Caveat', cursive;
+      font-size: 1.15rem;
+      color: rgba(255,255,255,.55);
+      margin-bottom: 20px;
+    }
+    .footer-copy {
+      font-size: .8rem;
+      color: rgba(255,255,255,.3);
+      letter-spacing: .04em;
+    }
+
+    /* Divider line */
+    .footer-divider {
+      width: 60px;
+      height: 1px;
+      background: rgba(255,255,255,.2);
+      margin: 28px auto;
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       RESPONSIVE
+    ═══════════════════════════════════════════════════════════ */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .nav-links.open {
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        top: 70px; left: 0; right: 0;
+        background: var(--cream);
+        padding: 24px;
+        gap: 20px;
+        border-bottom: 1px solid rgba(74,44,110,.1);
+        box-shadow: 0 8px 24px rgba(74,44,110,.1);
+      }
+      .nav-toggle { display: flex; }
+
+      .hero-inner {
+        grid-template-columns: 1fr;
+        padding-top: 50px;
+        text-align: center;
+      }
+      .hero-ctas { justify-content: center; }
+      .hero-visual { order: -1; }
+      .hero-ilus { max-width: 320px; margin: 0 auto; }
+      .hero-deco-2 { display: none; }
+
+      .nosotros-grid,
+      .eventos-header,
+      .comunidad-inner { grid-template-columns: 1fr; gap: 40px; }
+
+      .nosotros-ilus-float { display: none; }
+
+      .chapters-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+
+      .eventos-cards { grid-template-columns: 1fr; }
+
+      .manual-cta { padding: 28px 20px; }
+      .form-row { flex-direction: column; }
+      .form-row input { min-width: 100%; }
+
+      .eventos-form { flex-direction: column; max-width: 100%; }
+
+      .footer-links { flex-wrap: wrap; gap: 16px; }
+    }
+
+    @media (max-width: 480px) {
+      .hero-h1 { font-size: 1.9rem; }
+      .chapters-grid { grid-template-columns: 1fr 1fr; }
+      .social-icons { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════
+     NAV
+═══════════════════════════════════════════════════════════ -->
+<nav id="navbar">
+  <div class="nav-inner">
+    <a href="#hero" class="nav-logo">
+      <img src="assets/logo/Logo vinoso.png" alt="Vinoso logo" />
+      <span class="nav-logo-text">Vinoso</span>
+    </a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#nosotros">Nosotros</a></li>
+      <li><a href="#manual">El Manual</a></li>
+      <li><a href="#eventos">Eventos</a></li>
+      <li><a href="#comunidad">Comunidad</a></li>
+    </ul>
+    <button class="nav-toggle" id="navToggle" aria-label="Menú">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     HERO
+═══════════════════════════════════════════════════════════ -->
+<section id="hero">
+  <!-- decorative icons -->
+  <img class="hero-deco hero-deco-1"
+       src="assets/iconos/vine icon 8.png"
+       alt="" aria-hidden="true" />
+  <img class="hero-deco hero-deco-2"
+       src="assets/iconos/vine icon 3.png"
+       alt="" aria-hidden="true" />
+  <img class="hero-deco hero-deco-3"
+       src="assets/iconos/vine icon 1.png"
+       alt="" aria-hidden="true" />
+
+  <div class="hero-inner">
+    <div class="hero-text fade-in">
+      <span class="hero-tag">✦ vinoso.mx</span>
+      <h1 class="hero-h1">
+        El vino no es <span class="wavy">complicado</span>.<br/>
+        Lo complicado es cómo nos lo explicaron.
+      </h1>
+      <p class="hero-sub">
+        Bienvenido a Vinoso — sin snobismo,<br/>sin miedo, solo disfrute. 🍷
+      </p>
+      <div class="hero-ctas">
+        <a href="#manual" class="btn btn-primary">Conoce el Manual</a>
+        <a href="#nosotros" class="btn btn-outline">¿Qué es Vinoso?</a>
+      </div>
+    </div>
+
+    <div class="hero-visual fade-in" style="transition-delay:.2s">
+      <img class="hero-ilus"
+           src="assets/ilustraciones/ilustracion 1.png"
+           alt="Dos personas brindando con vino" />
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     QUÉ ES VINOSO
+═══════════════════════════════════════════════════════════ -->
+<section id="nosotros">
+  <div class="section-wrap">
+    <div class="nosotros-grid">
+
+      <div class="fade-in">
+        <p class="nosotros-label">— Nuestra filosofía</p>
+        <h2 class="nosotros-h2">El vino es para disfrutarse,<br/> no para impresionar.</h2>
+        <p class="nosotros-body">
+          Vinoso nació para que el vino deje de sentirse como un territorio ajeno.
+          Aquí encontrarás eventos, catas, materiales y una comunidad que comparte
+          una sola regla: no tienes que amar todo, solo tienes que encontrar lo tuyo. 🍇
+        </p>
+        <div class="nosotros-pills">
+          <span class="pill">
+            <img src="assets/iconos/vine icon 1.png" alt="" />
+            Catas
+          </span>
+          <span class="pill">
+            <img src="assets/iconos/vine icon 2.png" alt="" />
+            Eventos
+          </span>
+          <span class="pill">
+            <img src="assets/iconos/vine icon 7.png" alt="" />
+            Comunidad
+          </span>
+          <span class="pill">
+            <img src="assets/iconos/vine icon 5.png" alt="" />
+            Materiales
+          </span>
+        </div>
+      </div>
+
+      <div class="nosotros-visual fade-in" style="transition-delay:.15s">
+        <img class="nosotros-ilus-main"
+             src="assets/ilustraciones/ilustracion 5.png"
+             alt="Grupo de amigos disfrutando vino" />
+        <img class="nosotros-ilus-float"
+             src="assets/iconos/vine icon 4.png"
+             alt="" aria-hidden="true" />
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     MANUAL
+═══════════════════════════════════════════════════════════ -->
+<section id="manual">
+  <img class="manual-deco manual-deco-1"
+       src="assets/iconos/vine icon 3.png"
+       alt="" aria-hidden="true" />
+  <img class="manual-deco manual-deco-2"
+       src="assets/iconos/vine icon 1.png"
+       alt="" aria-hidden="true" />
+
+  <div class="section-wrap">
+    <div class="manual-header fade-in">
+      <span class="manual-label">✦ guía práctica</span>
+      <h2 class="manual-h2">Manual Anti-snob del Vino</h2>
+      <p class="manual-sub">Entiende, elige y disfruta el vino con seguridad en 15 días</p>
+      <p class="manual-desc">
+        Un recorrido práctico y sin pretensiones por todo lo que necesitas saber sobre el vino.
+        Sin tecnicismos para impresionar. Con claridad, criterio y confianza.
+      </p>
+    </div>
+
+    <div class="chapters-grid">
+
+      <div class="chapter-card fade-in" style="transition-delay:.05s">
+        <div class="chapter-num">00</div>
+        <img class="chapter-icon"
+             src="assets/iconos/vine icon 1.png" alt="" />
+        <p class="chapter-cap">Capítulo 0</p>
+        <p class="chapter-title">Bienvenido al mundo del vino</p>
+      </div>
+
+      <div class="chapter-card fade-in" style="transition-delay:.08s">
+        <div class="chapter-num">01</div>
+        <img class="chapter-icon"
+             src="assets/iconos/vine icon 3.png" alt="" />
+        <p class="chapter-cap">Capítulo 1</p>
+        <p class="chapter-title">El ABC del vino que desbloquea todo</p>
+      </div>
+
+      <div class="chapter-card fade-in" style="transition-delay:.11s">
+        <div class="chapter-num">02</div>
+        <img class="chapter-icon"
+             src="assets/iconos/vine icon 7.png" alt="" />
+        <p class="chapter-cap">Capítulo 2</p>
+        <p class="chapter-title">Cómo catar vino sin ser experto</p>
+      </div>
+
+      <div class="chapter-card fade-in" style="transition-delay:.14s">
+        <div class="chapter-num">03</div>
+        <img class="chapter-icon"
+             src="assets/iconos/vine icon 8.png" alt="" />
+        <p class="chapter-cap">Capítulo 3</p>
+        <p class="chapter-title">Cómo hablar del vino sin sonar falso</p>
+      </div>
+
+      <div class="chapter-card fade-in" style="transition-delay:.17s">
+        <div class="chapter-num">04</div>
+        <img class="chapter-icon"
+             src="assets/iconos/vine icon 14.png" alt="" />
+        <p class="chapter-cap">Capítulo 4</p>
+        <p class="chapter-title">Las uvas que realmente importan</p>
+      </div>
+
+      <div class="chapter-card fade-in" style="transition-delay:.20s">
+        <div class="chapter-num">05</div>
+        <img class="chapter-icon"
+             src="assets/iconos/vine icon 15.png" alt="" />
+        <p class="chapter-cap">Capítulo 5</p>
+        <p class="chapter-title">Países y regiones que debes ubicar</p>
+      </div>
+
+      <div class="chapter-card fade-in" style="transition-delay:.23s">
+        <div class="chapter-num">06</div>
+        <img class="chapter-icon"
+             src="assets/iconos/vine icon 4.png" alt="" />
+        <p class="chapter-cap">Capítulo 6</p>
+        <p class="chapter-title">Cómo leer una etiqueta y elegir bien</p>
+      </div>
+
+      <div class="chapter-card fade-in" style="transition-delay:.26s">
+        <div class="chapter-num">07</div>
+        <img class="chapter-icon"
+             src="assets/iconos/vine icon 2.png" alt="" />
+        <p class="chapter-cap">Capítulo 7</p>
+        <p class="chapter-title">Cómo se hace el vino (sin tecnicismos)</p>
+      </div>
+
+      <div class="chapter-card fade-in" style="transition-delay:.29s">
+        <div class="chapter-num">08</div>
+        <img class="chapter-icon"
+             src="assets/iconos/vine icon 17.png" alt="" />
+        <p class="chapter-cap">Capítulo 8</p>
+        <p class="chapter-title">Servicio y protocolo social del vino</p>
+      </div>
+
+      <div class="chapter-card fade-in" style="transition-delay:.32s">
+        <div class="chapter-num">09</div>
+        <img class="chapter-icon"
+             src="assets/iconos/vine icon 6.png" alt="" />
+        <p class="chapter-cap">Capítulo 9</p>
+        <p class="chapter-title">Maridaje, vino y comida sin complicaciones</p>
+      </div>
+
+      <div class="chapter-card fade-in" style="transition-delay:.35s">
+        <div class="chapter-num">10</div>
+        <img class="chapter-icon"
+             src="assets/iconos/vine icon 19.png" alt="" />
+        <p class="chapter-cap">Capítulo 10</p>
+        <p class="chapter-title">Cómo comprar vino y desarrollar tu gusto</p>
+      </div>
+
+      <div class="chapter-card fade-in" style="transition-delay:.38s">
+        <div class="chapter-num">11</div>
+        <img class="chapter-icon"
+             src="assets/iconos/vine icon 21.png" alt="" />
+        <p class="chapter-cap">Capítulo 11</p>
+        <p class="chapter-title">Plan práctico de 15 días</p>
+      </div>
+
+    </div><!-- /chapters-grid -->
+
+    <!-- CTA Form -->
+    <div class="manual-cta fade-in">
+      <h3>¿Listo para empezar?</h3>
+      <p>Recibe el Manual en tu correo — gratis, sin rodeos.</p>
+      <form id="formManual" onsubmit="handleForm(event,'confirmManual')">
+        <div class="form-row">
+          <input type="text" placeholder="Tu nombre" required />
+          <input type="email" placeholder="Tu correo" required />
+          <button type="submit" class="btn btn-white">Quiero el Manual</button>
+        </div>
+      </form>
+      <p class="form-success" id="confirmManual">
+        ¡Perfecto! 🍷 En breve recibirás el Manual en tu correo.
+      </p>
+    </div>
+
+  </div><!-- /section-wrap -->
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     EVENTOS
+═══════════════════════════════════════════════════════════ -->
+<section id="eventos">
+  <div class="section-wrap">
+
+    <div class="eventos-header">
+      <div class="eventos-text fade-in">
+        <p class="label-script">✦ próximamente</p>
+        <h2 class="eventos-h2">Eventos &amp; Catas</h2>
+        <p style="font-family:'Caveat',cursive;font-size:1.4rem;color:var(--purple-mid);margin-bottom:16px;">
+          algo está por venir...
+        </p>
+        <p class="eventos-body">
+          Estamos preparando experiencias para que el vino deje de ser un territorio ajeno.
+          Regístrate y sé el primero en enterarte.
+        </p>
+        <form class="eventos-form" id="formEventos" onsubmit="handleForm(event,'confirmEventos')">
+          <input type="email" placeholder="Tu correo electrónico" required />
+          <button type="submit" class="btn btn-primary">Avísame</button>
+        </form>
+        <p class="form-success" id="confirmEventos" style="color:var(--purple-mid);">
+          ¡Apuntado! 🍇 Te avisamos cuando haya novedades.
+        </p>
+      </div>
+
+      <div class="eventos-visual fade-in" style="transition-delay:.15s">
+        <img class="eventos-ilus"
+             src="assets/ilustraciones/ilustracion 6.png"
+             alt="Alguien sirviendo vino" />
+      </div>
+    </div>
+
+    <!-- 3 placeholder cards -->
+    <div class="eventos-cards">
+
+      <div class="evento-card fade-in" style="transition-delay:.1s">
+        <img class="evento-card-icon"
+             src="assets/iconos/vine icon 1.png"
+             alt="Copa de vino" />
+        <h3>Catas</h3>
+        <p>Aprende a identificar sabores y aromas de manera práctica y sin presión.</p>
+        <span class="evento-soon">muy pronto →</span>
+      </div>
+
+      <div class="evento-card fade-in" style="transition-delay:.2s">
+        <img class="evento-card-icon"
+             src="assets/iconos/vine icon 22.png"
+             alt="Evento" />
+        <h3>Eventos</h3>
+        <p>Noches temáticas, maridajes y experiencias diseñadas para disfrutar, no para demostrar.</p>
+        <span class="evento-soon">muy pronto →</span>
+      </div>
+
+      <div class="evento-card fade-in" style="transition-delay:.3s">
+        <img class="evento-card-icon"
+             src="assets/iconos/vine icon 7.png"
+             alt="Comunidad" />
+        <h3>Comunidad</h3>
+        <p>Un espacio donde compartir descubrimientos, dudas y botellas sin miedo a equivocarte.</p>
+        <span class="evento-soon">muy pronto →</span>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     COMUNIDAD
+═══════════════════════════════════════════════════════════ -->
+<section id="comunidad">
+  <div class="section-wrap">
+    <div class="comunidad-inner">
+
+      <div class="comunidad-visual fade-in">
+        <img class="comunidad-ilus"
+             src="assets/ilustraciones/ilustracion 4.png"
+             alt="Personas compartiendo vino" />
+        <img class="comunidad-float-icon"
+             src="assets/iconos/vine icon 2.png"
+             alt="" aria-hidden="true" />
+      </div>
+
+      <div class="fade-in" style="transition-delay:.15s">
+        <span class="comunidad-label">únete a la comunidad</span>
+        <h2 class="comunidad-h2">Comparte, aprende<br/> y disfruta.</h2>
+        <p class="comunidad-body">
+          Comparte, aprende y disfruta el vino sin pretensiones. Una comunidad que cree
+          que el mejor vino es el que te gusta a ti, sin importar el precio ni el pedigrí.
+        </p>
+        <div class="social-icons">
+          <a href="#" class="social-btn" aria-label="Instagram">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+              <circle cx="12" cy="12" r="4"/>
+              <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>
+            </svg>
+            Instagram
+          </a>
+          <a href="#" class="social-btn" aria-label="TikTok">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.79a4.85 4.85 0 0 1-1.01-.1z"/>
+            </svg>
+            TikTok
+          </a>
+          <a href="#" class="social-btn" aria-label="WhatsApp">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+              <path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.962-1.401A9.955 9.955 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18a7.95 7.95 0 0 1-4.054-1.107l-.29-.173-3.003.848.862-2.928-.19-.3A7.96 7.96 0 0 1 4 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8z"/>
+            </svg>
+            WhatsApp
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     FOOTER
+═══════════════════════════════════════════════════════════ -->
+<footer>
+  <img class="footer-logo"
+       src="assets/logo/Logo vinoso.png"
+       alt="Vinoso" />
+  <p class="footer-brand">Vinoso</p>
+  <p class="footer-url">vinoso.mx</p>
+
+  <ul class="footer-links">
+    <li><a href="#nosotros">Nosotros</a></li>
+    <li><a href="#manual">El Manual</a></li>
+    <li><a href="#eventos">Eventos</a></li>
+    <li><a href="#comunidad">Comunidad</a></li>
+  </ul>
+
+  <div class="footer-social">
+    <a href="#" aria-label="Instagram">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+        <circle cx="12" cy="12" r="4"/>
+        <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>
+      </svg>
+    </a>
+    <a href="#" aria-label="TikTok">
+      <svg viewBox="0 0 24 24" fill="currentColor">
+        <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.79a4.85 4.85 0 0 1-1.01-.1z"/>
+      </svg>
+    </a>
+    <a href="#" aria-label="WhatsApp">
+      <svg viewBox="0 0 24 24" fill="currentColor">
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+        <path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.962-1.401A9.955 9.955 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18a7.95 7.95 0 0 1-4.054-1.107l-.29-.173-3.003.848.862-2.928-.19-.3A7.96 7.96 0 0 1 4 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8z"/>
+      </svg>
+    </a>
+  </div>
+
+  <div class="footer-divider"></div>
+  <p class="footer-tagline">"El vino no es para expertos. Es para quienes deciden disfrutarlo."</p>
+  <p class="footer-copy">© 2025 Vinoso · vinoso.mx · Hecho con 🍷 en México</p>
+</footer>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     JAVASCRIPT
+═══════════════════════════════════════════════════════════ -->
+<script>
+  /* --- Nav scroll shadow --- */
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 20);
+  });
+
+  /* --- Mobile nav toggle --- */
+  const toggle = document.getElementById('navToggle');
+  const navLinks = document.getElementById('navLinks');
+  toggle.addEventListener('click', () => {
+    navLinks.classList.toggle('open');
+  });
+  navLinks.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => navLinks.classList.remove('open'));
+  });
+
+  /* --- Scroll fade-in --- */
+  const fadeEls = document.querySelectorAll('.fade-in');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  fadeEls.forEach(el => observer.observe(el));
+
+  /* --- Form handler --- */
+  function handleForm(e, confirmId) {
+    e.preventDefault();
+    const form = e.target;
+    const confirm = document.getElementById(confirmId);
+    form.style.display = 'none';
+    confirm.style.display = 'block';
+  }
+</script>
+
+</body>
+</html>
