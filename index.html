@@ -1,0 +1,1479 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vinoso — El vino sin pretensiones</title>
+  <meta name="description" content="Vinoso acerca vinos auténticos de bodegas independientes. Comunidad, eventos y el Manual Anti-Snob del Vino." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ─── TOKENS ─────────────────────────────────── */
+    :root {
+      --purple:   #41295F;
+      --purple-d: #23163A;
+      --purple-l: #5E3D7F;
+      --cream:    #E2D8C9;
+      --cream-l:  #F7F3EA;
+      --wine:     #B7354A;
+      --wine-d:   #7B2631;
+      --white:    #FFFFFF;
+      --gray:     #808080;
+      --text-dk:  #1A1A1A;
+
+      --font-serif: 'Playfair Display', Georgia, serif;
+      --font-sans:  'Inter', system-ui, sans-serif;
+
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* ─── RESET ──────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-sans);
+      background: var(--white);
+      color: var(--text-dk);
+      overflow-x: hidden;
+    }
+    img { display: block; max-width: 100%; }
+    a { text-decoration: none; color: inherit; }
+
+    /* ─── UTILITIES ──────────────────────────────── */
+    .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); }
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 clamp(1.25rem, 5vw, 3rem); }
+    .tag {
+      display: inline-block;
+      font-family: var(--font-sans);
+      font-size: .7rem;
+      font-weight: 600;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      padding: .35em .9em;
+      border-radius: 999px;
+      border: 1px solid currentColor;
+    }
+
+    /* ─── SCROLL ANIMATIONS ──────────────────────── */
+    [data-reveal] {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity .8s var(--ease-out), transform .8s var(--ease-out);
+    }
+    [data-reveal].visible { opacity: 1; transform: none; }
+    [data-reveal-left] {
+      opacity: 0;
+      transform: translateX(-50px);
+      transition: opacity .9s var(--ease-out), transform .9s var(--ease-out);
+    }
+    [data-reveal-left].visible { opacity: 1; transform: none; }
+    [data-reveal-right] {
+      opacity: 0;
+      transform: translateX(50px);
+      transition: opacity .9s var(--ease-out), transform .9s var(--ease-out);
+    }
+    [data-reveal-right].visible { opacity: 1; transform: none; }
+
+    /* ─── NAV ────────────────────────────────────── */
+    .nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 1.25rem 0;
+      transition: background .4s, backdrop-filter .4s, padding .4s;
+    }
+    .nav.scrolled {
+      background: rgba(35, 22, 58, .92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: .85rem 0;
+    }
+    .nav__inner {
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav__logo {
+      display: flex; align-items: center; gap: .7rem;
+    }
+    .nav__logo img { width: 44px; height: 44px; border-radius: 50%; }
+    .nav__logo-text {
+      font-family: var(--font-serif);
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--white);
+      letter-spacing: .04em;
+    }
+    .nav__links {
+      display: flex; gap: 2rem; list-style: none;
+    }
+    .nav__links a {
+      color: rgba(255,255,255,.75);
+      font-size: .85rem;
+      font-weight: 500;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      transition: color .3s;
+    }
+    .nav__links a:hover { color: var(--cream); }
+    .nav__cta {
+      background: var(--wine);
+      color: var(--white);
+      font-size: .8rem;
+      font-weight: 600;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      padding: .6rem 1.4rem;
+      border-radius: 999px;
+      transition: background .3s, transform .2s;
+    }
+    .nav__cta:hover { background: var(--wine-d); transform: scale(1.03); }
+    .nav__hamburger {
+      display: none;
+      flex-direction: column; gap: 5px;
+      background: none; border: none; cursor: pointer; padding: .4rem;
+    }
+    .nav__hamburger span { display: block; width: 24px; height: 2px; background: var(--white); border-radius: 2px; transition: .3s; }
+
+    @media (max-width: 768px) {
+      .nav__links, .nav__cta { display: none; }
+      .nav__hamburger { display: flex; }
+    }
+
+    /* ─── MOBILE MENU ────────────────────────────── */
+    .mobile-menu {
+      position: fixed; inset: 0; z-index: 99;
+      background: var(--purple-d);
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2.5rem;
+      opacity: 0; pointer-events: none;
+      transition: opacity .4s;
+    }
+    .mobile-menu.open { opacity: 1; pointer-events: all; }
+    .mobile-menu a {
+      color: var(--cream);
+      font-family: var(--font-serif);
+      font-size: 2rem;
+      font-weight: 700;
+    }
+
+    /* ─── HERO ───────────────────────────────────── */
+    .hero {
+      position: relative;
+      min-height: 100svh;
+      display: flex; align-items: center;
+      overflow: hidden;
+      background: var(--purple-d);
+    }
+    .hero__bg {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(135deg, rgba(35,22,58,.97) 0%, rgba(65,41,95,.7) 50%, rgba(35,22,58,.85) 100%),
+        url('https://images.unsplash.com/photo-1510812431-3f30d695191a?auto=format&fit=crop&w=1800&q=80');
+      background-size: cover;
+      background-position: center;
+      transform-origin: center;
+      animation: slowZoom 20s ease-in-out infinite alternate;
+    }
+    @keyframes slowZoom {
+      from { transform: scale(1); }
+      to   { transform: scale(1.06); }
+    }
+    .hero__noise {
+      position: absolute; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      opacity: .4;
+    }
+    .hero__container {
+      position: relative; z-index: 2;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem; align-items: center;
+    }
+    .hero__eyebrow {
+      color: var(--wine);
+      margin-bottom: 1.25rem;
+      border-color: var(--wine);
+      opacity: 0;
+      animation: fadeUp .8s .3s var(--ease-out) forwards;
+    }
+    .hero__title {
+      font-family: var(--font-serif);
+      font-size: clamp(2.8rem, 6vw, 5.2rem);
+      font-weight: 900;
+      line-height: 1.03;
+      color: var(--white);
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: fadeUp .9s .5s var(--ease-out) forwards;
+    }
+    .hero__title em {
+      font-style: italic;
+      color: var(--cream);
+    }
+    .hero__sub {
+      font-size: clamp(.95rem, 1.5vw, 1.15rem);
+      color: rgba(226,216,201,.75);
+      line-height: 1.75;
+      max-width: 480px;
+      margin-bottom: 2.5rem;
+      opacity: 0;
+      animation: fadeUp .9s .7s var(--ease-out) forwards;
+    }
+    .hero__actions {
+      display: flex; gap: 1rem; flex-wrap: wrap;
+      opacity: 0;
+      animation: fadeUp .9s .9s var(--ease-out) forwards;
+    }
+    .btn-primary {
+      background: var(--wine);
+      color: var(--white);
+      font-weight: 600;
+      font-size: .9rem;
+      letter-spacing: .05em;
+      padding: .9rem 2rem;
+      border-radius: 999px;
+      transition: background .3s, transform .2s, box-shadow .3s;
+    }
+    .btn-primary:hover {
+      background: var(--wine-d);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px rgba(183,53,74,.4);
+    }
+    .btn-ghost {
+      background: transparent;
+      color: var(--cream);
+      font-weight: 500;
+      font-size: .9rem;
+      letter-spacing: .05em;
+      padding: .9rem 2rem;
+      border-radius: 999px;
+      border: 1px solid rgba(226,216,201,.4);
+      transition: border-color .3s, color .3s;
+    }
+    .btn-ghost:hover { border-color: var(--cream); color: var(--white); }
+
+    .hero__visual {
+      display: flex; justify-content: center; align-items: center;
+      opacity: 0;
+      animation: fadeRight .9s .6s var(--ease-out) forwards;
+    }
+    .hero__circle-wrap {
+      position: relative; width: clamp(280px, 38vw, 480px); aspect-ratio: 1;
+    }
+    .hero__img-main {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      border-radius: 50% 50% 50% 12px;
+      box-shadow: 0 40px 80px rgba(0,0,0,.5);
+    }
+    .hero__badge {
+      position: absolute; bottom: -1.5rem; left: -1.5rem;
+      background: var(--wine);
+      color: var(--white);
+      border-radius: 50%;
+      width: 110px; height: 110px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center;
+      box-shadow: 0 8px 24px rgba(183,53,74,.5);
+      animation: spin 20s linear infinite;
+    }
+    .hero__badge-inner { font-size: .55rem; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; line-height: 1.6; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .hero__scroll {
+      position: absolute; bottom: 2.5rem; left: 50%;
+      transform: translateX(-50%);
+      z-index: 2; display: flex; flex-direction: column; align-items: center; gap: .5rem;
+      opacity: 0; animation: fadeUp 1s 1.4s var(--ease-out) forwards;
+    }
+    .hero__scroll span {
+      font-size: .65rem; letter-spacing: .2em; text-transform: uppercase; color: rgba(226,216,201,.5);
+    }
+    .hero__scroll-line {
+      width: 1px; height: 48px;
+      background: linear-gradient(to bottom, rgba(226,216,201,.4), transparent);
+      animation: scrollLine 2s ease-in-out infinite;
+    }
+    @keyframes scrollLine {
+      0%,100% { transform: scaleY(1); opacity: .5; }
+      50% { transform: scaleY(.5); opacity: 1; }
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: none; }
+    }
+    @keyframes fadeRight {
+      from { opacity: 0; transform: translateX(40px); }
+      to   { opacity: 1; transform: none; }
+    }
+
+    @media (max-width: 768px) {
+      .hero__container {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+      .hero__sub { margin: 0 auto 2rem; }
+      .hero__actions { justify-content: center; }
+      .hero__visual { order: -1; }
+      .hero__circle-wrap { width: clamp(220px, 70vw, 340px); }
+    }
+
+    /* ─── MARQUEE ────────────────────────────────── */
+    .marquee-wrap {
+      background: var(--wine);
+      padding: 1.1rem 0;
+      overflow: hidden;
+    }
+    .marquee {
+      display: flex; gap: 0;
+      animation: marquee 30s linear infinite;
+      white-space: nowrap;
+    }
+    .marquee__track {
+      display: flex; gap: 0; flex-shrink: 0;
+    }
+    .marquee__item {
+      font-family: var(--font-serif);
+      font-size: clamp(.95rem, 1.8vw, 1.15rem);
+      font-style: italic;
+      color: var(--white);
+      padding: 0 2.5rem;
+    }
+    .marquee__sep {
+      color: rgba(255,255,255,.4);
+      font-size: 1.2rem;
+      align-self: center;
+    }
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    /* ─── MANIFESTO ──────────────────────────────── */
+    .manifesto {
+      padding: clamp(5rem, 10vw, 9rem) 0;
+      background: var(--cream-l);
+      overflow: hidden;
+    }
+    .manifesto__inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: center;
+    }
+    .manifesto__img-wrap {
+      position: relative;
+    }
+    .manifesto__img {
+      width: 100%;
+      aspect-ratio: 4/5;
+      object-fit: cover;
+      border-radius: 2px 60px 2px 60px;
+    }
+    .manifesto__img-accent {
+      position: absolute;
+      bottom: -2rem; right: -2rem;
+      width: 55%;
+      aspect-ratio: 1;
+      border: 3px solid var(--wine);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .manifesto__content { }
+    .manifesto__tag { color: var(--purple); border-color: var(--purple); margin-bottom: 1.5rem; }
+    .manifesto__title {
+      font-family: var(--font-serif);
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      font-weight: 900;
+      line-height: 1.1;
+      color: var(--purple-d);
+      margin-bottom: 1.5rem;
+    }
+    .manifesto__text {
+      font-size: 1rem;
+      color: #444;
+      line-height: 1.8;
+      margin-bottom: 1rem;
+    }
+    .manifesto__quote {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 1.2rem;
+      color: var(--wine);
+      line-height: 1.6;
+      padding-left: 1.5rem;
+      border-left: 3px solid var(--wine);
+      margin: 2rem 0;
+    }
+
+    @media (max-width: 768px) {
+      .manifesto__inner { grid-template-columns: 1fr; gap: 3rem; }
+      .manifesto__img-accent { right: -1rem; bottom: -1rem; }
+    }
+
+    /* ─── PILARES ────────────────────────────────── */
+    .pilares {
+      padding: clamp(5rem, 10vw, 9rem) 0;
+      background: var(--purple-d);
+      overflow: hidden;
+    }
+    .pilares__header {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+    .pilares__tag { color: var(--cream); border-color: var(--cream); margin-bottom: 1rem; }
+    .pilares__title {
+      font-family: var(--font-serif);
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 900;
+      color: var(--white);
+      line-height: 1.15;
+    }
+    .pilares__grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+    .pilar {
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(226,216,201,.1);
+      border-radius: 16px;
+      padding: 2.5rem 2rem;
+      transition: background .3s, transform .3s, border-color .3s;
+    }
+    .pilar:hover {
+      background: rgba(183,53,74,.12);
+      border-color: rgba(183,53,74,.4);
+      transform: translateY(-6px);
+    }
+    .pilar__icon {
+      font-size: 2.4rem;
+      margin-bottom: 1.25rem;
+    }
+    .pilar__num {
+      font-family: var(--font-serif);
+      font-size: .75rem;
+      font-weight: 700;
+      letter-spacing: .2em;
+      color: var(--wine);
+      margin-bottom: .5rem;
+    }
+    .pilar__title {
+      font-family: var(--font-serif);
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--cream);
+      margin-bottom: .75rem;
+    }
+    .pilar__text {
+      font-size: .9rem;
+      color: rgba(226,216,201,.65);
+      line-height: 1.75;
+    }
+
+    @media (max-width: 768px) {
+      .pilares__grid { grid-template-columns: 1fr; }
+    }
+    @media (min-width: 769px) and (max-width: 1024px) {
+      .pilares__grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    /* ─── MANUAL ─────────────────────────────────── */
+    .manual {
+      padding: clamp(5rem, 10vw, 9rem) 0;
+      background: var(--white);
+      overflow: hidden;
+    }
+    .manual__inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6rem;
+      align-items: center;
+    }
+    .manual__tag { color: var(--wine); border-color: var(--wine); margin-bottom: 1.5rem; }
+    .manual__title {
+      font-family: var(--font-serif);
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      font-weight: 900;
+      color: var(--purple-d);
+      line-height: 1.1;
+      margin-bottom: 1.5rem;
+    }
+    .manual__title span { color: var(--wine); }
+    .manual__text {
+      font-size: 1rem;
+      color: #555;
+      line-height: 1.8;
+      margin-bottom: 2rem;
+    }
+    .manual__features {
+      list-style: none;
+      display: flex; flex-direction: column; gap: 1rem;
+      margin-bottom: 2.5rem;
+    }
+    .manual__features li {
+      display: flex; align-items: flex-start; gap: .85rem;
+      font-size: .95rem;
+      color: #444;
+    }
+    .manual__features li::before {
+      content: '';
+      flex-shrink: 0;
+      width: 20px; height: 20px;
+      background: var(--wine);
+      border-radius: 50%;
+      margin-top: 2px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='white'%3E%3Cpath fill-rule='evenodd' d='M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z' clip-rule='evenodd'/%3E%3C/svg%3E");
+      background-size: 14px;
+      background-repeat: no-repeat;
+      background-position: center;
+    }
+
+    .manual__book-wrap {
+      position: relative;
+      display: flex; justify-content: center;
+    }
+    .manual__book {
+      position: relative;
+      width: clamp(220px, 35vw, 380px);
+    }
+    .manual__book-cover {
+      width: 100%;
+      background: var(--purple);
+      border-radius: 4px 16px 16px 4px;
+      padding: 3rem 2.5rem;
+      box-shadow:
+        -12px 0 0 -4px var(--purple-d),
+        -24px 0 0 -8px rgba(35,22,58,.5),
+        0 30px 60px rgba(65,41,95,.4);
+      aspect-ratio: 3/4;
+      display: flex; flex-direction: column; justify-content: space-between;
+    }
+    .manual__book-top {
+      display: flex; flex-direction: column; gap: .6rem;
+    }
+    .manual__book-badge {
+      background: var(--wine);
+      color: var(--white);
+      font-size: .6rem; font-weight: 700; letter-spacing: .15em; text-transform: uppercase;
+      padding: .3em .8em; border-radius: 4px; align-self: flex-start;
+    }
+    .manual__book-title {
+      font-family: var(--font-serif);
+      font-size: clamp(1.1rem, 2.5vw, 1.6rem);
+      font-weight: 900;
+      color: var(--white);
+      line-height: 1.15;
+    }
+    .manual__book-sub {
+      font-size: .75rem;
+      color: var(--cream);
+      line-height: 1.5;
+      opacity: .8;
+    }
+    .manual__book-logo {
+      display: flex; align-items: center; gap: .5rem;
+    }
+    .manual__book-logo-circle {
+      width: 32px; height: 32px;
+      border: 1.5px solid rgba(255,255,255,.4);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .manual__book-logo-circle svg { width: 18px; height: 18px; }
+    .manual__book-logo-text {
+      font-family: var(--font-serif);
+      font-size: .8rem; font-weight: 700;
+      color: rgba(255,255,255,.7); letter-spacing: .08em;
+    }
+    .manual__book-deco {
+      position: absolute;
+      top: -2rem; right: -2rem;
+      width: 120px; height: 120px;
+      border: 2px dashed var(--cream);
+      border-radius: 50%;
+      opacity: .15;
+    }
+    .manual__price-badge {
+      position: absolute;
+      bottom: 2rem; right: -3rem;
+      background: var(--cream);
+      border-radius: 50%;
+      width: 90px; height: 90px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      box-shadow: 0 8px 24px rgba(0,0,0,.15);
+    }
+    .manual__price-badge small { font-size: .6rem; color: var(--gray); }
+    .manual__price-badge strong { font-family: var(--font-serif); font-size: 1.2rem; color: var(--purple-d); }
+
+    @media (max-width: 768px) {
+      .manual__inner { grid-template-columns: 1fr; gap: 3rem; }
+      .manual__price-badge { right: 1rem; }
+    }
+
+    /* ─── VINOS ──────────────────────────────────── */
+    .vinos {
+      padding: clamp(5rem, 10vw, 9rem) 0;
+      background: var(--cream);
+    }
+    .vinos__header {
+      display: flex; flex-wrap: wrap;
+      justify-content: space-between; align-items: flex-end;
+      gap: 2rem; margin-bottom: 4rem;
+    }
+    .vinos__tag { color: var(--purple); border-color: var(--purple); margin-bottom: 1rem; }
+    .vinos__title {
+      font-family: var(--font-serif);
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 900;
+      color: var(--purple-d);
+      line-height: 1.1;
+      max-width: 500px;
+    }
+    .vinos__sub { font-size: .95rem; color: #666; max-width: 350px; line-height: 1.7; }
+
+    .vinos__grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+    .vino-card {
+      background: var(--white);
+      border-radius: 16px;
+      overflow: hidden;
+      transition: transform .35s var(--ease-out), box-shadow .35s;
+      cursor: default;
+    }
+    .vino-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 24px 48px rgba(65,41,95,.15);
+    }
+    .vino-card__img {
+      width: 100%; aspect-ratio: 4/3;
+      object-fit: cover;
+      transition: transform .6s var(--ease-out);
+    }
+    .vino-card:hover .vino-card__img { transform: scale(1.06); }
+    .vino-card__body { padding: 1.5rem; }
+    .vino-card__region {
+      font-size: .7rem; font-weight: 600; letter-spacing: .14em; text-transform: uppercase;
+      color: var(--wine); margin-bottom: .5rem;
+    }
+    .vino-card__name {
+      font-family: var(--font-serif);
+      font-size: 1.15rem; font-weight: 700;
+      color: var(--purple-d); margin-bottom: .5rem;
+    }
+    .vino-card__desc {
+      font-size: .85rem; color: #666; line-height: 1.65;
+    }
+
+    @media (max-width: 768px) {
+      .vinos__grid { grid-template-columns: 1fr; }
+    }
+    @media (min-width: 769px) and (max-width: 1024px) {
+      .vinos__grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    /* ─── COMUNIDAD ──────────────────────────────── */
+    .comunidad {
+      padding: clamp(5rem, 10vw, 9rem) 0;
+      background: var(--purple);
+      overflow: hidden;
+      position: relative;
+    }
+    .comunidad::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 60% 50%, rgba(183,53,74,.25), transparent);
+    }
+    .comunidad__inner {
+      position: relative; z-index: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem; align-items: center;
+    }
+    .comunidad__tag { color: var(--cream); border-color: var(--cream); margin-bottom: 1.5rem; }
+    .comunidad__title {
+      font-family: var(--font-serif);
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      font-weight: 900;
+      color: var(--white);
+      line-height: 1.1; margin-bottom: 1.5rem;
+    }
+    .comunidad__text {
+      color: rgba(226,216,201,.75);
+      font-size: 1rem; line-height: 1.8; margin-bottom: 2.5rem;
+    }
+    .comunidad__form {
+      display: flex; gap: .75rem; flex-wrap: wrap;
+    }
+    .comunidad__input {
+      flex: 1; min-width: 220px;
+      background: rgba(255,255,255,.1);
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 999px;
+      color: var(--white);
+      font-size: .9rem; padding: .85rem 1.5rem;
+      outline: none; transition: border-color .3s;
+    }
+    .comunidad__input::placeholder { color: rgba(255,255,255,.4); }
+    .comunidad__input:focus { border-color: var(--cream); }
+    .btn-cream {
+      background: var(--cream);
+      color: var(--purple-d);
+      font-weight: 700; font-size: .85rem; letter-spacing: .05em;
+      padding: .85rem 1.75rem;
+      border-radius: 999px;
+      white-space: nowrap;
+      border: none; cursor: pointer;
+      transition: background .3s, transform .2s;
+    }
+    .btn-cream:hover { background: var(--white); transform: scale(1.03); }
+
+    .comunidad__visual {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    .comunidad__photo {
+      border-radius: 12px;
+      overflow: hidden;
+      aspect-ratio: 3/4;
+    }
+    .comunidad__photo:first-child {
+      margin-top: 2rem;
+    }
+    .comunidad__photo img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform .6s var(--ease-out);
+    }
+    .comunidad__photo:hover img { transform: scale(1.05); }
+
+    @media (max-width: 768px) {
+      .comunidad__inner { grid-template-columns: 1fr; gap: 3rem; }
+      .comunidad__visual { display: none; }
+    }
+
+    /* ─── EVENTOS ────────────────────────────────── */
+    .eventos {
+      padding: clamp(5rem, 10vw, 9rem) 0;
+      background: var(--cream-l);
+    }
+    .eventos__header {
+      text-align: center; margin-bottom: 4rem;
+    }
+    .eventos__tag { color: var(--wine); border-color: var(--wine); margin-bottom: 1rem; }
+    .eventos__title {
+      font-family: var(--font-serif);
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 900; color: var(--purple-d);
+      margin-bottom: 1rem;
+    }
+    .eventos__sub { font-size: 1rem; color: #666; max-width: 500px; margin: 0 auto; line-height: 1.7; }
+
+    .eventos__coming-soon {
+      max-width: 700px; margin: 0 auto;
+      background: var(--white);
+      border-radius: 24px;
+      padding: 4rem 3rem;
+      text-align: center;
+      box-shadow: 0 8px 40px rgba(65,41,95,.1);
+      border: 1px solid rgba(65,41,95,.06);
+    }
+    .eventos__cs-icon { font-size: 4rem; margin-bottom: 1.5rem; }
+    .eventos__cs-title {
+      font-family: var(--font-serif);
+      font-size: 1.8rem; font-weight: 900;
+      color: var(--purple-d); margin-bottom: 1rem;
+    }
+    .eventos__cs-text {
+      color: #666; line-height: 1.8; margin-bottom: 2rem; font-size: .95rem;
+    }
+    .eventos__notify-form {
+      display: flex; gap: .75rem; justify-content: center; flex-wrap: wrap;
+    }
+    .eventos__notify-input {
+      border: 1.5px solid rgba(65,41,95,.2);
+      border-radius: 999px;
+      padding: .8rem 1.5rem; font-size: .9rem;
+      min-width: 240px; outline: none;
+      transition: border-color .3s;
+    }
+    .eventos__notify-input:focus { border-color: var(--purple); }
+
+    /* ─── STATS ──────────────────────────────────── */
+    .stats {
+      padding: clamp(4rem, 8vw, 6rem) 0;
+      background: var(--wine);
+    }
+    .stats__grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2rem; text-align: center;
+    }
+    .stat__num {
+      font-family: var(--font-serif);
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 900; color: var(--white);
+      line-height: 1;
+    }
+    .stat__label {
+      font-size: .8rem; font-weight: 500;
+      letter-spacing: .12em; text-transform: uppercase;
+      color: rgba(255,255,255,.6);
+      margin-top: .5rem;
+    }
+
+    @media (max-width: 768px) {
+      .stats__grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    /* ─── CTA FINAL ──────────────────────────────── */
+    .cta-final {
+      padding: clamp(6rem, 12vw, 10rem) 0;
+      background: var(--purple-d);
+      text-align: center;
+      overflow: hidden;
+      position: relative;
+    }
+    .cta-final__bg {
+      position: absolute; inset: 0;
+      background-image: url('https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?auto=format&fit=crop&w=1600&q=70');
+      background-size: cover; background-position: center;
+      opacity: .12;
+    }
+    .cta-final__content { position: relative; z-index: 1; }
+    .cta-final__tag { color: var(--cream); border-color: var(--cream); margin: 0 auto 1.5rem; }
+    .cta-final__title {
+      font-family: var(--font-serif);
+      font-size: clamp(2.5rem, 6vw, 5rem);
+      font-weight: 900;
+      color: var(--white); line-height: 1.05;
+      max-width: 700px; margin: 0 auto 1.5rem;
+    }
+    .cta-final__title em { font-style: italic; color: var(--wine); }
+    .cta-final__sub {
+      color: rgba(226,216,201,.7); font-size: 1.05rem;
+      max-width: 480px; margin: 0 auto 3rem; line-height: 1.75;
+    }
+    .cta-final__actions {
+      display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;
+    }
+
+    /* ─── FOOTER ─────────────────────────────────── */
+    .footer {
+      background: #0D0A14;
+      padding: 4rem 0 2rem;
+    }
+    .footer__grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 3rem; margin-bottom: 3rem;
+    }
+    .footer__brand-logo {
+      display: flex; align-items: center; gap: .75rem; margin-bottom: 1rem;
+    }
+    .footer__brand-logo img { width: 40px; height: 40px; border-radius: 50%; }
+    .footer__brand-name {
+      font-family: var(--font-serif);
+      font-size: 1.2rem; font-weight: 700; color: var(--white);
+    }
+    .footer__brand-text { font-size: .85rem; color: rgba(255,255,255,.45); line-height: 1.7; }
+    .footer__socials {
+      display: flex; gap: .75rem; margin-top: 1.5rem;
+    }
+    .footer__social {
+      width: 36px; height: 36px;
+      border: 1px solid rgba(255,255,255,.15);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      transition: border-color .3s, background .3s;
+    }
+    .footer__social:hover { border-color: var(--wine); background: rgba(183,53,74,.2); }
+    .footer__social svg { width: 16px; height: 16px; fill: rgba(255,255,255,.6); }
+    .footer__col-title {
+      font-size: .7rem; font-weight: 700; letter-spacing: .15em; text-transform: uppercase;
+      color: rgba(255,255,255,.35); margin-bottom: 1.25rem;
+    }
+    .footer__links {
+      list-style: none; display: flex; flex-direction: column; gap: .75rem;
+    }
+    .footer__links a {
+      font-size: .875rem; color: rgba(255,255,255,.55);
+      transition: color .3s;
+    }
+    .footer__links a:hover { color: var(--cream); }
+    .footer__bottom {
+      border-top: 1px solid rgba(255,255,255,.07);
+      padding-top: 2rem;
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 1rem;
+    }
+    .footer__copy { font-size: .8rem; color: rgba(255,255,255,.3); }
+    .footer__heart { color: var(--wine); }
+
+    @media (max-width: 768px) {
+      .footer__grid { grid-template-columns: 1fr 1fr; }
+      .footer__grid > *:first-child { grid-column: 1 / -1; }
+    }
+    @media (max-width: 480px) {
+      .footer__grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ─── NAV ─────────────────────────────────────── -->
+<nav class="nav" id="nav">
+  <div class="container">
+    <div class="nav__inner">
+      <a href="#" class="nav__logo">
+        <img src="https://i.imgur.com/placeholder.png"
+             onerror="this.style.display='none'"
+             alt="Vinoso logo" />
+        <span class="nav__logo-text">Vinoso</span>
+      </a>
+      <ul class="nav__links">
+        <li><a href="#manifesto">Nosotros</a></li>
+        <li><a href="#manual">El Manual</a></li>
+        <li><a href="#vinos">Vinos</a></li>
+        <li><a href="#comunidad">Comunidad</a></li>
+        <li><a href="#eventos">Eventos</a></li>
+      </ul>
+      <a href="#manual" class="nav__cta">Consigue el Manual</a>
+      <button class="nav__hamburger" id="hamburger" aria-label="Menú">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#manifesto" class="mobile-link">Nosotros</a>
+  <a href="#manual" class="mobile-link">El Manual</a>
+  <a href="#vinos" class="mobile-link">Vinos</a>
+  <a href="#comunidad" class="mobile-link">Comunidad</a>
+  <a href="#eventos" class="mobile-link">Eventos</a>
+</div>
+
+<!-- ─── HERO ─────────────────────────────────────── -->
+<section class="hero" id="hero">
+  <div class="hero__bg"></div>
+  <div class="hero__noise"></div>
+  <div class="container">
+    <div class="hero__container">
+      <div class="hero__text">
+        <span class="tag hero__eyebrow">El vino sin pretensiones</span>
+        <h1 class="hero__title">
+          El vino es<br/>
+          para <em>disfrutarlo,</em><br/>
+          no para presumirlo.
+        </h1>
+        <p class="hero__sub">
+          En Vinoso acercamos vinos auténticos de bodegas independientes a quienes disfrutan descubrir, aprender y compartir una copa con estilo.
+        </p>
+        <div class="hero__actions">
+          <a href="#manual" class="btn-primary">Manual Anti-Snob →</a>
+          <a href="#comunidad" class="btn-ghost">Únete a la comunidad</a>
+        </div>
+      </div>
+      <div class="hero__visual">
+        <div class="hero__circle-wrap">
+          <img
+            src="https://images.unsplash.com/photo-1510812431-3f30d695191a?auto=format&fit=crop&w=800&q=85"
+            alt="Personas brindando con vino"
+            class="hero__img-main"
+          />
+          <div class="hero__badge">
+            <span class="hero__badge-inner">Manual<br/>Anti-Snob<br/>del Vino<br/>2026</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="hero__scroll">
+    <div class="hero__scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<!-- ─── MARQUEE ──────────────────────────────────── -->
+<div class="marquee-wrap" aria-hidden="true">
+  <div class="marquee">
+    <div class="marquee__track">
+      <span class="marquee__item">Vino auténtico</span>
+      <span class="marquee__sep">·</span>
+      <span class="marquee__item">Bodegas independientes</span>
+      <span class="marquee__sep">·</span>
+      <span class="marquee__item">Sin esnobismo</span>
+      <span class="marquee__sep">·</span>
+      <span class="marquee__item">Comunidad real</span>
+      <span class="marquee__sep">·</span>
+      <span class="marquee__item">Descubrir & compartir</span>
+      <span class="marquee__sep">·</span>
+      <span class="marquee__item">Historias en cada copa</span>
+      <span class="marquee__sep">·</span>
+      <span class="marquee__item">Vinoso mx</span>
+      <span class="marquee__sep">·</span>
+    </div>
+    <div class="marquee__track" aria-hidden="true">
+      <span class="marquee__item">Vino auténtico</span>
+      <span class="marquee__sep">·</span>
+      <span class="marquee__item">Bodegas independientes</span>
+      <span class="marquee__sep">·</span>
+      <span class="marquee__item">Sin esnobismo</span>
+      <span class="marquee__sep">·</span>
+      <span class="marquee__item">Comunidad real</span>
+      <span class="marquee__sep">·</span>
+      <span class="marquee__item">Descubrir & compartir</span>
+      <span class="marquee__sep">·</span>
+      <span class="marquee__item">Historias en cada copa</span>
+      <span class="marquee__sep">·</span>
+      <span class="marquee__item">Vinoso mx</span>
+      <span class="marquee__sep">·</span>
+    </div>
+  </div>
+</div>
+
+<!-- ─── MANIFESTO ────────────────────────────────── -->
+<section class="manifesto" id="manifesto">
+  <div class="container">
+    <div class="manifesto__inner">
+      <div data-reveal-left>
+        <div class="manifesto__img-wrap">
+          <img
+            src="https://images.unsplash.com/photo-1474631245212-32dc3c8310c6?auto=format&fit=crop&w=800&q=80"
+            alt="Viñedo al atardecer"
+            class="manifesto__img"
+          />
+          <div class="manifesto__img-accent"></div>
+        </div>
+      </div>
+      <div data-reveal-right>
+        <span class="tag manifesto__tag">Nuestra filosofía</span>
+        <h2 class="manifesto__title">
+          El vino como puente entre personas, historias y culturas
+        </h2>
+        <p class="manifesto__text">
+          Creemos que el vino no debería intimidar a nadie. Vinoso nació para romper esa barrera invisible entre el vino y la gente. No somos sommeliers con nariz levantada; somos apasionados con ganas de compartir una copa sin complicarla.
+        </p>
+        <blockquote class="manifesto__quote">
+          "Creemos en el vino como un puente entre personas, historias y culturas."
+        </blockquote>
+        <p class="manifesto__text">
+          Trabajamos con bodegas independientes que hacen vino con alma propia, lejos del ruido industrial. Vinos que tienen una historia detrás de cada botella y que merecen ser conocidos.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── PILARES ───────────────────────────────────── -->
+<section class="pilares" id="pilares">
+  <div class="container">
+    <div class="pilares__header" data-reveal>
+      <span class="tag pilares__tag">Lo que hacemos</span>
+      <h2 class="pilares__title">
+        Vinoso es más que una marca.<br/>Es un movimiento.
+      </h2>
+    </div>
+    <div class="pilares__grid">
+      <div class="pilar" data-reveal style="transition-delay:.1s">
+        <div class="pilar__icon">🍷</div>
+        <div class="pilar__num">01</div>
+        <h3 class="pilar__title">Vinos auténticos</h3>
+        <p class="pilar__text">Seleccionamos y acercamos vinos de bodegas independientes con historia, terroir genuino y productores que aman lo que hacen.</p>
+      </div>
+      <div class="pilar" data-reveal style="transition-delay:.2s">
+        <div class="pilar__icon">🎉</div>
+        <div class="pilar__num">02</div>
+        <h3 class="pilar__title">Eventos & convivios</h3>
+        <p class="pilar__text">Creamos espacios para encontrarse, degustar, aprender y hacer comunidad alrededor de lo que más nos une: una buena copa de vino.</p>
+      </div>
+      <div class="pilar" data-reveal style="transition-delay:.3s">
+        <div class="pilar__icon">📖</div>
+        <div class="pilar__num">03</div>
+        <h3 class="pilar__title">Educación sin snobismo</h3>
+        <p class="pilar__text">El conocimiento del vino no debería ser exclusivo. Nuestro Manual Anti-Snob democratiza el mundo del vino de forma divertida y accesible.</p>
+      </div>
+      <div class="pilar" data-reveal style="transition-delay:.4s">
+        <div class="pilar__icon">🤝</div>
+        <div class="pilar__num">04</div>
+        <h3 class="pilar__title">Co-crear juntos</h3>
+        <p class="pilar__text">Vinoso es una plataforma abierta. Queremos construir con nuestra comunidad, no solo para ella. Tu voz, tus ideas, tu paladar importan.</p>
+      </div>
+      <div class="pilar" data-reveal style="transition-delay:.5s">
+        <div class="pilar__icon">🌍</div>
+        <div class="pilar__num">05</div>
+        <h3 class="pilar__title">Cultura del vino</h3>
+        <p class="pilar__text">Cada botella tiene una historia geográfica, humana y cultural. En Vinoso exploramos esas historias para que cada copa tenga más sentido.</p>
+      </div>
+      <div class="pilar" data-reveal style="transition-delay:.6s">
+        <div class="pilar__icon">✨</div>
+        <div class="pilar__num">06</div>
+        <h3 class="pilar__title">Estilo propio</h3>
+        <p class="pilar__text">Disfrutar el vino tiene su propio estilo y no existe una sola forma correcta. En Vinoso encontrás el tuyo, sin reglas absurdas.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── MANUAL ────────────────────────────────────── -->
+<section class="manual" id="manual">
+  <div class="container">
+    <div class="manual__inner">
+      <div data-reveal-left>
+        <span class="tag manual__tag">Ya disponible</span>
+        <h2 class="manual__title">
+          El <span>Manual<br/>Anti-Snob</span><br/>del Vino
+        </h2>
+        <p class="manual__text">
+          ¿Te ha pasado que en una cata no entiendes nada de lo que dicen? ¿Que el menú de vinos te intimida? Este manual existe exactamente para eso. Para que disfrutes el vino sin necesitar un doctorado.
+        </p>
+        <ul class="manual__features">
+          <li>Todo lo que necesitas saber para elegir un buen vino</li>
+          <li>Cómo leer una etiqueta sin perderte en el intento</li>
+          <li>Maridajes simples que funcionan de verdad</li>
+          <li>Glosario anti-pretensioso del vocabulario del vino</li>
+          <li>Guía de regiones vinícolas con personalidad propia</li>
+          <li>Tips para armar tu propia bodega sin gastar de más</li>
+        </ul>
+        <a href="https://vinoso.mx" target="_blank" rel="noopener" class="btn-primary">
+          Consíguelo en vinoso.mx →
+        </a>
+      </div>
+      <div data-reveal-right>
+        <div class="manual__book-wrap">
+          <div class="manual__book-deco"></div>
+          <div class="manual__book">
+            <div class="manual__book-cover">
+              <div class="manual__book-top">
+                <span class="manual__book-badge">2026 Edition</span>
+                <h3 class="manual__book-title">Manual Anti-Snob del Vino</h3>
+                <p class="manual__book-sub">Todo lo que necesitas saber para disfrutar el vino sin pretensiones ni complicaciones.</p>
+              </div>
+              <div class="manual__book-logo">
+                <div class="manual__book-logo-circle">
+                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2C8.5 2 6 5 6 8.5c0 2.5 1.5 4.5 3.5 5.5L9 18h6l-.5-4C16.5 13 18 11 18 8.5 18 5 15.5 2 12 2z" stroke="white" stroke-width="1.5" fill="none"/>
+                    <path d="M9 18h6" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+                  </svg>
+                </div>
+                <span class="manual__book-logo-text">VINOSO</span>
+              </div>
+            </div>
+          </div>
+          <div class="manual__price-badge">
+            <small>desde</small>
+            <strong>$299</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── VINOS ─────────────────────────────────────── -->
+<section class="vinos" id="vinos">
+  <div class="container">
+    <div class="vinos__header">
+      <div data-reveal-left>
+        <span class="tag vinos__tag">Selección Vinoso</span>
+        <h2 class="vinos__title">Vinos con historia,<br/>sin el teatro</h2>
+      </div>
+      <p class="vinos__sub" data-reveal-right>
+        Trabajamos directamente con bodegas independientes. Cada vino que recomendamos tiene una razón de ser.
+      </p>
+    </div>
+    <div class="vinos__grid">
+      <div class="vino-card" data-reveal style="transition-delay:.1s">
+        <div style="overflow:hidden">
+          <img
+            src="https://images.unsplash.com/photo-1553361371-9b22f78e8b1d?auto=format&fit=crop&w=700&q=80"
+            alt="Vino tinto mexicano"
+            class="vino-card__img"
+          />
+        </div>
+        <div class="vino-card__body">
+          <p class="vino-card__region">Valle de Guadalupe · Baja California</p>
+          <h3 class="vino-card__name">Tintos del Valle</h3>
+          <p class="vino-card__desc">Tempranillo con notas de fruta madura y un final largo. Hecho por una familia que lleva tres generaciones en la vid.</p>
+        </div>
+      </div>
+      <div class="vino-card" data-reveal style="transition-delay:.2s">
+        <div style="overflow:hidden">
+          <img
+            src="https://images.unsplash.com/photo-1567529684892-b97a9e1df3c3?auto=format&fit=crop&w=700&q=80"
+            alt="Copa de vino rosado"
+            class="vino-card__img"
+          />
+        </div>
+        <div class="vino-card__body">
+          <p class="vino-card__region">Queretaro · México</p>
+          <h3 class="vino-card__name">Rosados de Altitude</h3>
+          <p class="vino-card__desc">A 1,850 metros sobre el nivel del mar, las uvas desarrollan una acidez vibrante y una elegancia poco usual en los rosados mexicanos.</p>
+        </div>
+      </div>
+      <div class="vino-card" data-reveal style="transition-delay:.3s">
+        <div style="overflow:hidden">
+          <img
+            src="https://images.unsplash.com/photo-1528605248644-7c86249ec4af?auto=format&fit=crop&w=700&q=80"
+            alt="Evento de vino en grupo"
+            class="vino-card__img"
+          />
+        </div>
+        <div class="vino-card__body">
+          <p class="vino-card__region">Coahuila · México</p>
+          <h3 class="vino-card__name">Blancos de desierto</h3>
+          <p class="vino-card__desc">El calor extremo del día y las noches frescas del desierto dan origen a blancos con carácter único y mineralidad sorprendente.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── STATS ─────────────────────────────────────── -->
+<section class="stats">
+  <div class="container">
+    <div class="stats__grid">
+      <div data-reveal style="transition-delay:.1s">
+        <div class="stat__num" data-count="200">0</div>
+        <div class="stat__label">páginas del manual</div>
+      </div>
+      <div data-reveal style="transition-delay:.2s">
+        <div class="stat__num" data-count="15">0</div>
+        <div class="stat__label">regiones vinícolas</div>
+      </div>
+      <div data-reveal style="transition-delay:.3s">
+        <div class="stat__num" data-count="100">0</div>
+        <div class="stat__label">vinos explorados</div>
+      </div>
+      <div data-reveal style="transition-delay:.4s">
+        <div class="stat__num">∞</div>
+        <div class="stat__label">copas por compartir</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── COMUNIDAD ─────────────────────────────────── -->
+<section class="comunidad" id="comunidad">
+  <div class="container">
+    <div class="comunidad__inner">
+      <div data-reveal-left>
+        <span class="tag comunidad__tag">Únete</span>
+        <h2 class="comunidad__title">
+          El vino sabe mejor<br/>cuando lo compartes
+        </h2>
+        <p class="comunidad__text">
+          Vinoso es una comunidad en construcción. Queremos que seas parte desde el principio: que traigas tus recomendaciones, que participes en nuestros convivios, que co-crees con nosotros lo que Vinoso va a ser.
+        </p>
+        <p class="comunidad__text">
+          Déjanos tu correo y serás de los primeros en enterarte de cada evento, cata y lanzamiento. Sin spam. Solo vino.
+        </p>
+        <form class="comunidad__form" onsubmit="handleForm(event)">
+          <input
+            type="email" required
+            placeholder="tu@correo.com"
+            class="comunidad__input"
+            id="emailInput"
+          />
+          <button type="submit" class="btn-cream">Quiero ser parte</button>
+        </form>
+        <p id="formMsg" style="color:var(--cream);font-size:.85rem;margin-top:.75rem;min-height:1.2em;"></p>
+      </div>
+      <div class="comunidad__visual" data-reveal-right>
+        <div class="comunidad__photo">
+          <img
+            src="https://images.unsplash.com/photo-1528605248644-7c86249ec4af?auto=format&fit=crop&w=500&q=80"
+            alt="Amigos disfrutando vino"
+          />
+        </div>
+        <div class="comunidad__photo">
+          <img
+            src="https://images.unsplash.com/photo-1510812431-3f30d695191a?auto=format&fit=crop&w=500&q=80"
+            alt="Copas de vino en convivio"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── EVENTOS ───────────────────────────────────── -->
+<section class="eventos" id="eventos">
+  <div class="container">
+    <div class="eventos__header" data-reveal>
+      <span class="tag eventos__tag">Próximamente</span>
+      <h2 class="eventos__title">Eventos & Convivios</h2>
+      <p class="eventos__sub">Estamos armando algo especial. Los primeros eventos de Vinoso están en camino y queremos que tú estés ahí.</p>
+    </div>
+    <div class="eventos__coming-soon" data-reveal>
+      <div class="eventos__cs-icon">🍾</div>
+      <h3 class="eventos__cs-title">El primer convivio se acerca</h3>
+      <p class="eventos__cs-text">
+        Estamos cocinando el primer evento oficial de Vinoso: una noche de catas, historias de bodegas y mucha buena vibra. Sé el primero en saberlo.
+      </p>
+      <form class="eventos__notify-form" onsubmit="handleNotify(event)">
+        <input
+          type="email" required
+          placeholder="Notifícame cuando haya eventos"
+          class="eventos__notify-input"
+          id="eventInput"
+        />
+        <button type="submit" class="btn-primary">Avisar →</button>
+      </form>
+      <p id="eventMsg" style="color:var(--purple);font-size:.85rem;margin-top:.75rem;min-height:1.2em;"></p>
+    </div>
+  </div>
+</section>
+
+<!-- ─── CTA FINAL ─────────────────────────────────── -->
+<section class="cta-final">
+  <div class="cta-final__bg"></div>
+  <div class="container">
+    <div class="cta-final__content" data-reveal>
+      <span class="tag cta-final__tag">Vinoso.mx</span>
+      <h2 class="cta-final__title">
+        Abre una botella.<br/>
+        <em>Empieza la conversación.</em>
+      </h2>
+      <p class="cta-final__sub">
+        El vino es el pretexto. La gente, las historias y la cultura son el verdadero motivo.
+      </p>
+      <div class="cta-final__actions">
+        <a href="https://vinoso.mx" target="_blank" rel="noopener" class="btn-primary">Ir a vinoso.mx</a>
+        <a href="#manual" class="btn-ghost">Ver el Manual Anti-Snob</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FOOTER ────────────────────────────────────── -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer__grid">
+      <div>
+        <div class="footer__brand-logo">
+          <img src="https://i.imgur.com/placeholder.png"
+               onerror="this.style.display='none'"
+               alt="Vinoso" />
+          <span class="footer__brand-name">Vinoso</span>
+        </div>
+        <p class="footer__brand-text">
+          Acercamos vinos auténticos de bodegas independientes a quienes disfrutan descubrir, aprender y compartir una copa con estilo.
+        </p>
+        <div class="footer__socials">
+          <!-- Instagram -->
+          <a href="https://instagram.com/vinoso.mx" target="_blank" rel="noopener" class="footer__social" aria-label="Instagram">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+            </svg>
+          </a>
+          <!-- TikTok -->
+          <a href="https://tiktok.com/@vinoso.mx" target="_blank" rel="noopener" class="footer__social" aria-label="TikTok">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V9.03a8.16 8.16 0 004.77 1.52V7.1a4.85 4.85 0 01-1-.41z"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+      <div>
+        <h4 class="footer__col-title">Vinoso</h4>
+        <ul class="footer__links">
+          <li><a href="#manifesto">Nosotros</a></li>
+          <li><a href="#pilares">Qué hacemos</a></li>
+          <li><a href="#vinos">Vinos</a></li>
+          <li><a href="#eventos">Eventos</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="footer__col-title">El Manual</h4>
+        <ul class="footer__links">
+          <li><a href="#manual">Qué incluye</a></li>
+          <li><a href="https://vinoso.mx" target="_blank" rel="noopener">Comprarlo</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="footer__col-title">Contacto</h4>
+        <ul class="footer__links">
+          <li><a href="mailto:hola@vinoso.mx">hola@vinoso.mx</a></li>
+          <li><a href="https://vinoso.mx" target="_blank" rel="noopener">vinoso.mx</a></li>
+          <li><a href="#comunidad">Únete</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <p class="footer__copy">© 2026 Vinoso · Hecho con <span class="footer__heart">♥</span> en México</p>
+      <p class="footer__copy">El vino une personas, historias y culturas.</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+  /* ── NAV scroll ─────────────────────────────── */
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 60);
+  }, { passive: true });
+
+  /* ── Hamburger ──────────────────────────────── */
+  const hamburger = document.getElementById('hamburger');
+  const mobileMenu = document.getElementById('mobileMenu');
+  hamburger.addEventListener('click', () => {
+    mobileMenu.classList.toggle('open');
+  });
+  document.querySelectorAll('.mobile-link').forEach(l => {
+    l.addEventListener('click', () => mobileMenu.classList.remove('open'));
+  });
+
+  /* ── Scroll reveal ──────────────────────────── */
+  const revealOpts = { threshold: 0.12, rootMargin: '0px 0px -60px 0px' };
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        io.unobserve(e.target);
+      }
+    });
+  }, revealOpts);
+  document.querySelectorAll('[data-reveal],[data-reveal-left],[data-reveal-right]').forEach(el => io.observe(el));
+
+  /* ── Count-up ───────────────────────────────── */
+  const countObs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      const el = e.target;
+      const target = +el.dataset.count;
+      const dur = 1800;
+      const start = performance.now();
+      const tick = (now) => {
+        const prog = Math.min((now - start) / dur, 1);
+        const ease = 1 - Math.pow(1 - prog, 3);
+        el.textContent = Math.round(ease * target) + '+';
+        if (prog < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+      countObs.unobserve(el);
+    });
+  }, { threshold: .5 });
+  document.querySelectorAll('[data-count]').forEach(el => countObs.observe(el));
+
+  /* ── Forms ──────────────────────────────────── */
+  function handleForm(e) {
+    e.preventDefault();
+    const msg = document.getElementById('formMsg');
+    msg.textContent = '¡Listo! Ya eres parte de Vinoso. 🍷';
+    document.getElementById('emailInput').value = '';
+  }
+  function handleNotify(e) {
+    e.preventDefault();
+    const msg = document.getElementById('eventMsg');
+    msg.textContent = '¡Te avisamos en cuanto haya evento! 🎉';
+    document.getElementById('eventInput').value = '';
+  }
+</script>
+</body>
+</html>
