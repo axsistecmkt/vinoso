@@ -3,901 +3,790 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Vinoso — Manual Anti-snob del Vino</title>
+  <title>Vinoso — El vino sin pretensiones</title>
+  <meta name="description" content="Comunidad, vinos auténticos y el Manual Anti-Snob del Vino."/>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,700;0,9..144,900;1,9..144,700;1,9..144,900&family=Caveat:wght@400;600;700&family=Lato:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet"/>
-
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,700;1,9..144,900&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
   <style>
-  /* ── RESET ────────────────────────────────────────────────── */
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
-  img  { display: block; max-width: 100%; }
-  a    { text-decoration: none; color: inherit; }
-  body { font-family: 'Lato', sans-serif; overflow-x: hidden; }
+:root{
+  --p:#41295F;--pd:#23163A;--pl:#5E3D7F;
+  --c:#E2D8C9;--cl:#F5F0E8;
+  --w:#B7354A;--wd:#7B2631;
+  --wh:#FFFFFF;--blk:#0D0A14;--gr:#6B6B6B;
+  --serif:'Fraunces',Georgia,serif;
+  --sans:'DM Sans',system-ui,sans-serif;
+  --ease:cubic-bezier(0.16,1,0.3,1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:16px}
+body{font-family:var(--sans);background:var(--cl);color:var(--blk);overflow-x:hidden;cursor:none}
+img{display:block;max-width:100%}
+a{text-decoration:none;color:inherit}
+button{font-family:inherit;cursor:none}
 
-  /* ── VARS ─────────────────────────────────────────────────── */
-  :root {
-    --nav:   #3E1F72;
-    --deep:  #3E1F72;
-    --mid:   #6B3FA0;
-    --light: #9B7DC8;
-    --pale:  #C8B8E0;
-    --red:   #B83040;
-    --dark:  #1C0838;
-    --text:  #2A1545;
-    --paper: #E3DDD5;
-    --white: #FFFFFF;
-  }
+/* CURSOR */
+#cursor{
+  position:fixed;z-index:9999;
+  width:12px;height:12px;background:var(--w);border-radius:50%;
+  pointer-events:none;transform:translate(-50%,-50%);
+  transition:width .3s var(--ease),height .3s var(--ease),background .3s;
+}
+#cursor.big{width:56px;height:56px;background:rgba(183,53,74,.12);border:1.5px solid var(--w)}
+@media(hover:none){#cursor{display:none}body{cursor:auto}button{cursor:pointer}}
 
-  /* ── PAPER TEXTURE ────────────────────────────────────────── */
-  .paper {
-    background-color: var(--paper);
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='250' height='250'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='250' height='250' filter='url(%23n)' opacity='0.09'/%3E%3C/svg%3E");
-    background-size: 250px 250px;
-  }
+/* NAV */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:500;
+  padding:1.25rem 0;
+  mix-blend-mode:difference;
+}
+.nav__in{
+  max-width:1400px;margin:0 auto;
+  padding:0 clamp(1.5rem,5vw,4rem);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.nav__logo{
+  font-family:var(--serif);font-size:1.35rem;font-weight:900;
+  color:var(--wh);letter-spacing:.02em;
+}
+.nav__links{display:flex;gap:2.5rem;list-style:none}
+.nav__links a{
+  font-size:.75rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--wh);opacity:.65;transition:opacity .3s;
+}
+.nav__links a:hover{opacity:1}
+.nav__btn{
+  font-size:.73rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--wh);border:1px solid rgba(255,255,255,.35);
+  padding:.5rem 1.3rem;border-radius:999px;
+  transition:background .3s,border-color .3s;
+}
+.nav__btn:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.8)}
+.nav__menu-btn{display:none;background:none;border:none;flex-direction:column;gap:5px;padding:.4rem}
+.nav__menu-btn span{display:block;width:22px;height:1.5px;background:var(--wh)}
 
-  /* ── FADE ─────────────────────────────────────────────────── */
-  .fade { opacity:0; transform:translateY(20px); transition:opacity .6s ease,transform .6s ease; }
-  .fade.in { opacity:1; transform:none; }
+.mobile-nav{
+  position:fixed;inset:0;z-index:490;background:var(--pd);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2.5rem;
+  opacity:0;pointer-events:none;transition:opacity .5s var(--ease);
+}
+.mobile-nav.on{opacity:1;pointer-events:all}
+.mobile-nav a{font-family:var(--serif);font-size:clamp(2.5rem,8vw,4rem);font-weight:700;color:var(--c);opacity:.6;transition:opacity .3s}
+.mobile-nav a:hover{opacity:1}
+.mobile-nav__close{position:absolute;top:2rem;right:2rem;background:none;border:none;color:var(--c);font-size:2rem;line-height:1}
+@media(max-width:900px){.nav__links,.nav__btn{display:none}.nav__menu-btn{display:flex}}
 
-  /* ── BUTTONS ──────────────────────────────────────────────── */
-  .btn {
-    display: inline-block;
-    font-family: 'Lato', sans-serif;
-    font-weight: 700;
-    font-size: .88rem;
-    letter-spacing: .05em;
-    padding: 13px 28px;
-    border-radius: 50px;
-    border: none;
-    cursor: pointer;
-    transition: transform .18s, box-shadow .18s, filter .18s;
-    white-space: nowrap;
-  }
-  .btn:hover { transform: translateY(-2px); }
-  .btn-lavender { background: #C0AAD8; color: var(--dark); }
-  .btn-lavender:hover { filter:brightness(1.06); box-shadow:0 5px 16px rgba(62,31,114,.22); }
-  .btn-purple   { background: var(--deep); color: var(--white); }
-  .btn-purple:hover { box-shadow:0 5px 18px rgba(62,31,114,.4); }
-  .btn-white    { background: var(--white); color: var(--deep); }
+/* HERO */
+.hero{
+  position:relative;min-height:100svh;background:var(--pd);
+  display:grid;grid-template-rows:1fr auto;overflow:hidden;
+}
+.hero__bg{
+  position:absolute;inset:0;
+  background:url('https://images.unsplash.com/photo-1510812431-3f30d695191a?auto=format&fit=crop&w=1800&q=80') center/cover no-repeat;
+  opacity:.22;transform:scale(1.05);
+  animation:bgZoom 18s ease-in-out infinite alternate;
+}
+@keyframes bgZoom{to{transform:scale(1)}}
+.hero__gradient{
+  position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 100% 80% at 0% 100%,rgba(183,53,74,.3),transparent 55%),
+    linear-gradient(180deg,transparent 35%,var(--pd) 100%);
+}
+.hero__content{
+  position:relative;z-index:2;
+  display:flex;flex-direction:column;justify-content:flex-end;
+  padding:clamp(5rem,10vw,9rem) clamp(1.5rem,5vw,4rem) 3rem;
+  max-width:1400px;margin:0 auto;width:100%;
+}
+.hero__eyebrow{
+  display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;
+  opacity:0;animation:fadeUp .8s .4s var(--ease) forwards;
+}
+.hero__eyebrow-line{width:36px;height:1px;background:var(--w)}
+.hero__eyebrow-text{font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--w);font-weight:500}
+.hero__title{
+  font-family:var(--serif);
+  font-size:clamp(3.2rem,9vw,8.5rem);
+  font-weight:900;line-height:.96;color:var(--wh);margin-bottom:2rem;
+  opacity:0;animation:fadeUp .9s .6s var(--ease) forwards;
+}
+.hero__title em{font-style:italic;color:var(--c)}
+.hero__title .accent{color:var(--w)}
+.hero__bottom{
+  display:flex;align-items:flex-end;justify-content:space-between;gap:2rem;flex-wrap:wrap;
+  opacity:0;animation:fadeUp .9s .9s var(--ease) forwards;
+}
+.hero__desc{max-width:380px;font-size:.93rem;color:rgba(226,216,201,.6);line-height:1.75}
+.hero__actions{display:flex;gap:1rem;align-items:center;flex-wrap:wrap}
+.btn-wine{
+  background:var(--w);color:var(--wh);
+  font-size:.8rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;
+  padding:.8rem 1.9rem;border-radius:999px;border:none;display:inline-block;
+  transition:background .3s,transform .25s,box-shadow .3s;
+}
+.btn-wine:hover{background:var(--wd);transform:translateY(-3px);box-shadow:0 14px 36px rgba(183,53,74,.38)}
+.btn-outline-light{
+  color:rgba(226,216,201,.75);font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;
+  border-bottom:1px solid rgba(226,216,201,.28);padding-bottom:.15rem;
+  transition:color .3s,border-color .3s;
+}
+.btn-outline-light:hover{color:var(--c);border-color:var(--c)}
 
-  /* ════════════════════════════════════════════════════════════
-     NAV
-  ════════════════════════════════════════════════════════════ */
-  nav {
-    position: fixed;
-    top:0; left:0; right:0;
-    z-index: 300;
-    background: var(--nav);
-    transition: box-shadow .3s;
-  }
-  nav.scrolled { box-shadow: 0 2px 20px rgba(0,0,0,.4); }
+.hero__footer{
+  position:relative;z-index:2;
+  max-width:1400px;margin:0 auto;width:100%;
+  padding:1.25rem clamp(1.5rem,5vw,4rem);
+  display:flex;align-items:center;justify-content:space-between;
+  border-top:1px solid rgba(255,255,255,.06);
+}
+.hero__scroll-hint{display:flex;align-items:center;gap:.7rem;color:rgba(255,255,255,.3);font-size:.68rem;letter-spacing:.18em;text-transform:uppercase}
+.hero__scroll-dot{width:6px;height:6px;border-radius:50%;background:var(--w);animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:.4;transform:scale(1)}50%{opacity:1;transform:scale(1.4)}}
+.hero__tagline{font-family:var(--serif);font-style:italic;font-size:.82rem;color:rgba(226,216,201,.28)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
 
-  .nav-inner {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    max-width: 1160px;
-    margin: 0 auto;
-    padding: 0 32px;
-    height: 78px;
-  }
+/* ABOUT */
+.about{display:grid;grid-template-columns:1fr 1fr;min-height:70vh}
+.about__img-side{position:relative;overflow:hidden}
+.about__img{width:100%;height:100%;object-fit:cover;transition:transform .8s var(--ease)}
+.about__img-side:hover .about__img{transform:scale(1.04)}
+.about__img-overlay{position:absolute;inset:0;background:linear-gradient(135deg,rgba(35,22,58,.35),transparent)}
+.about__text-side{
+  background:var(--p);
+  display:flex;flex-direction:column;justify-content:center;
+  padding:clamp(2.5rem,6vw,5rem) clamp(2rem,5vw,4.5rem);
+}
+.about__kicker{
+  font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:var(--w);font-weight:500;
+  display:flex;align-items:center;gap:.7rem;margin-bottom:1.5rem;
+}
+.about__kicker::before{content:'';width:28px;height:1px;background:var(--w)}
+.about__title{
+  font-family:var(--serif);font-size:clamp(2rem,3.5vw,3.4rem);
+  font-weight:900;line-height:1.05;color:var(--wh);margin-bottom:1.5rem;
+}
+.about__title em{color:var(--c);font-style:italic}
+.about__quote{
+  border-left:2px solid var(--w);padding-left:1.4rem;
+  font-family:var(--serif);font-style:italic;font-size:1.05rem;color:var(--c);line-height:1.6;
+}
+@media(max-width:768px){.about{grid-template-columns:1fr}.about__img-side{min-height:50vw}}
 
-  .nav-logo {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0;
-    line-height: 1;
-  }
-  .nav-logo img {
-    width: 56px; height: 56px;
-    object-fit: contain;
-    filter: brightness(0) invert(1);
-  }
-  .nav-logo span {
-    font-family: 'Lato', sans-serif;
-    font-size: .72rem;
-    font-weight: 700;
-    letter-spacing: .14em;
-    color: rgba(255,255,255,.8);
-    margin-top: -1px;
-  }
+/* PILLARS */
+.pillars{background:var(--cl);padding:clamp(3.5rem,7vw,6rem) 0;overflow:hidden}
+.pillars__header{
+  max-width:1400px;margin:0 auto;
+  padding:0 clamp(1.5rem,5vw,4rem);
+  display:flex;align-items:flex-end;justify-content:space-between;gap:2rem;flex-wrap:wrap;
+  margin-bottom:3rem;
+}
+.pillars__title{font-family:var(--serif);font-size:clamp(2.2rem,4.5vw,4.5rem);font-weight:900;line-height:1;color:var(--p)}
+.pillars__title em{font-style:italic;color:var(--w)}
+.pillars__sub{max-width:280px;font-size:.88rem;color:var(--gr);line-height:1.7}
 
-  .nav-links {
-    display: flex;
-    align-items: center;
-    list-style: none;
-  }
-  .nav-links li { display: flex; align-items: center; }
-  .nav-links li + li::before {
-    content: '|';
-    color: rgba(255,255,255,.3);
-    margin: 0 18px;
-    font-size: .85rem;
-  }
-  .nav-links a {
-    font-family: 'Lato', sans-serif;
-    font-size: .88rem;
-    color: rgba(255,255,255,.88);
-    transition: color .2s;
-  }
-  .nav-links a:hover { color: var(--pale); }
+.pillars__scroll{
+  padding-left:clamp(1.5rem,5vw,4rem);
+  display:flex;gap:1rem;overflow-x:auto;
+  scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;
+  padding-bottom:1rem;scrollbar-width:none;
+}
+.pillars__scroll::-webkit-scrollbar{display:none}
+.pcard{
+  flex:0 0 clamp(230px,26vw,310px);scroll-snap-align:start;
+  background:var(--wh);border-radius:18px;padding:2rem 1.75rem;
+  border:1px solid rgba(65,41,95,.07);
+  transition:transform .4s var(--ease),box-shadow .4s,border-color .4s;
+  position:relative;overflow:hidden;
+}
+.pcard::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:var(--w);transform:scaleX(0);transform-origin:left;transition:transform .4s var(--ease);
+}
+.pcard:hover{transform:translateY(-6px);box-shadow:0 20px 48px rgba(65,41,95,.11);border-color:rgba(65,41,95,.1)}
+.pcard:hover::before{transform:scaleX(1)}
+.pcard__num{font-family:var(--serif);font-size:3rem;font-weight:900;color:rgba(65,41,95,.06);line-height:1;margin-bottom:.4rem}
+.pcard__icon{font-size:1.75rem;margin-bottom:1rem}
+.pcard__title{font-family:var(--serif);font-size:1.2rem;font-weight:700;color:var(--p);margin-bottom:.5rem}
+.pcard__text{font-size:.83rem;color:var(--gr);line-height:1.7}
 
-  .nav-toggle {
-    display: none;
-    flex-direction: column;
-    gap: 5px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 4px;
-  }
-  .nav-toggle span { display:block; width:24px; height:2px; background:white; border-radius:2px; }
+/* MANUAL */
+.manual{background:var(--pd);position:relative;overflow:hidden}
+.manual__bg-text{
+  position:absolute;font-family:var(--serif);font-size:clamp(7rem,16vw,18rem);
+  font-weight:900;color:rgba(255,255,255,.02);white-space:nowrap;
+  top:50%;left:50%;transform:translate(-50%,-50%);
+  pointer-events:none;letter-spacing:-.02em;user-select:none;
+}
+.manual__inner{
+  position:relative;z-index:1;max-width:1400px;margin:0 auto;
+  padding:clamp(3.5rem,8vw,7rem) clamp(1.5rem,5vw,4rem);
+  display:grid;grid-template-columns:1fr 1fr;gap:clamp(2.5rem,7vw,7rem);align-items:center;
+}
+.manual__kicker{
+  font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:var(--w);font-weight:500;
+  display:flex;align-items:center;gap:.7rem;margin-bottom:1.5rem;
+}
+.manual__kicker::before{content:'';width:28px;height:1px;background:var(--w)}
+.manual__title{
+  font-family:var(--serif);font-size:clamp(2.2rem,4.5vw,4.5rem);
+  font-weight:900;line-height:1;color:var(--wh);margin-bottom:1.25rem;
+}
+.manual__title span{display:block;font-style:italic;color:var(--c)}
+.manual__desc{font-size:.9rem;color:rgba(226,216,201,.55);line-height:1.8;margin-bottom:2rem}
+.manual__list{list-style:none;display:flex;flex-direction:column;gap:.7rem;margin-bottom:2.5rem}
+.manual__list li{display:flex;align-items:center;gap:.9rem;font-size:.85rem;color:rgba(226,216,201,.65)}
+.manual__list li::before{content:'→';color:var(--w);font-size:.85rem;flex-shrink:0}
 
-  /* ════════════════════════════════════════════════════════════
-     SLIDER HERO
-  ════════════════════════════════════════════════════════════ */
-  #slider-section {
-    padding-top: 78px;
-    background: var(--white);
-    padding-bottom: 32px;
-  }
+.manual__book-scene{perspective:1000px}
+.manual__book{
+  transform:rotateY(-15deg) rotateX(5deg);transform-style:preserve-3d;
+  transition:transform .6s var(--ease);
+  position:relative;width:100%;max-width:300px;margin:0 auto;
+}
+.manual__book:hover{transform:rotateY(-5deg) rotateX(2deg)}
+.manual__book-front{
+  background:linear-gradient(145deg,var(--p),var(--pl));
+  border-radius:4px 16px 16px 4px;padding:2.5rem 2.25rem;
+  aspect-ratio:.7;display:flex;flex-direction:column;justify-content:space-between;
+  box-shadow:-8px 0 0 rgba(0,0,0,.4),-16px 4px 0 rgba(0,0,0,.2),0 36px 72px rgba(0,0,0,.55),inset 0 0 0 1px rgba(255,255,255,.07);
+  position:relative;overflow:hidden;
+}
+.manual__book-front::before{
+  content:'';position:absolute;inset:0;
+  background:repeating-linear-gradient(0deg,transparent,transparent 28px,rgba(255,255,255,.02) 28px,rgba(255,255,255,.02) 29px);
+}
+.manual__book-badge2{
+  background:var(--w);color:var(--wh);font-size:.56rem;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;padding:.3em .75em;border-radius:3px;
+  align-self:flex-start;position:relative;z-index:1;
+}
+.manual__book-ttl{position:relative;z-index:1}
+.manual__book-ttl h3{font-family:var(--serif);font-size:clamp(1.1rem,2.5vw,1.6rem);font-weight:900;color:var(--wh);line-height:1.1;margin-bottom:.4rem}
+.manual__book-ttl p{font-size:.68rem;color:rgba(226,216,201,.5);line-height:1.5}
+.manual__book-brand{font-family:var(--serif);font-size:.8rem;font-weight:700;color:rgba(255,255,255,.28);letter-spacing:.12em;position:relative;z-index:1}
+.manual__book-deco{position:absolute;bottom:-2rem;right:-2rem;width:130px;height:130px;border:38px solid rgba(183,53,74,.14);border-radius:50%}
+@media(max-width:768px){.manual__inner{grid-template-columns:1fr}}
 
-  .slider-wrapper {
-    max-width: 1160px;
-    margin: 0 auto;
-    padding: 28px 28px 0;
-  }
+/* VINOS */
+.vinos{background:var(--c);padding:clamp(3.5rem,7vw,6rem) 0}
+.vinos__header{max-width:1400px;margin:0 auto;padding:0 clamp(1.5rem,5vw,4rem);margin-bottom:3rem}
+.vinos__kicker{
+  font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:var(--p);font-weight:500;
+  display:flex;align-items:center;gap:.7rem;margin-bottom:1rem;
+}
+.vinos__kicker::before{content:'';width:28px;height:1px;background:var(--p)}
+.vinos__title{font-family:var(--serif);font-size:clamp(2.2rem,4.5vw,4.5rem);font-weight:900;line-height:1;color:var(--pd)}
+.vinos__title em{font-style:italic;color:var(--w)}
 
-  .slider-viewport {
-    overflow: hidden;
-    border-radius: 20px;
-  }
+.vinos__grid{
+  max-width:1400px;margin:0 auto;padding:0 clamp(1.5rem,5vw,4rem);
+  display:grid;grid-template-columns:repeat(12,1fr);gap:1rem;
+}
+.vcard{background:var(--wh);border-radius:14px;overflow:hidden;transition:transform .4s var(--ease),box-shadow .4s}
+.vcard:hover{transform:translateY(-5px);box-shadow:0 20px 52px rgba(35,22,58,.14)}
+.vcard:nth-child(1){grid-column:span 5}
+.vcard:nth-child(2){grid-column:span 4}
+.vcard:nth-child(3){grid-column:span 3}
+.vcard__img-wrap{overflow:hidden}
+.vcard__img{width:100%;aspect-ratio:4/3;object-fit:cover;transition:transform .7s var(--ease)}
+.vcard:hover .vcard__img{transform:scale(1.06)}
+.vcard__body{padding:1.25rem 1.25rem 1.75rem}
+.vcard__region{font-size:.65rem;letter-spacing:.16em;text-transform:uppercase;color:var(--w);font-weight:600;margin-bottom:.4rem}
+.vcard__name{font-family:var(--serif);font-size:1.1rem;font-weight:700;color:var(--pd);margin-bottom:.4rem}
+.vcard__desc{font-size:.8rem;color:var(--gr);line-height:1.65}
+@media(max-width:900px){.vinos__grid{grid-template-columns:1fr 1fr}.vcard:nth-child(n){grid-column:span 1}}
+@media(max-width:600px){.vinos__grid{grid-template-columns:1fr}}
 
-  .slider-track {
-    display: flex;
-    transition: transform .5s cubic-bezier(.4,0,.2,1);
-  }
+/* COMUNIDAD */
+.comunidad{background:var(--cl);padding:clamp(3.5rem,7vw,6rem) 0}
+.comunidad__inner{
+  max-width:1400px;margin:0 auto;padding:0 clamp(1.5rem,5vw,4rem);
+  display:grid;grid-template-columns:1fr 1fr;gap:clamp(2.5rem,6vw,6rem);align-items:center;
+}
+.comunidad__kicker{
+  font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:var(--w);font-weight:500;
+  display:flex;align-items:center;gap:.7rem;margin-bottom:1.5rem;
+}
+.comunidad__kicker::before{content:'';width:28px;height:1px;background:var(--w)}
+.comunidad__title{
+  font-family:var(--serif);font-size:clamp(2rem,4vw,4rem);
+  font-weight:900;line-height:1;color:var(--pd);margin-bottom:1.25rem;
+}
+.comunidad__title em{font-style:italic;color:var(--p)}
+.comunidad__body{font-size:.9rem;color:var(--gr);line-height:1.8;margin-bottom:2rem}
+.comunidad__form{display:flex;gap:.7rem;flex-wrap:wrap}
+.comunidad__input{
+  flex:1;min-width:200px;background:var(--wh);
+  border:1.5px solid rgba(65,41,95,.15);border-radius:999px;
+  padding:.8rem 1.4rem;font-family:var(--sans);font-size:.88rem;
+  color:var(--blk);outline:none;transition:border-color .3s;
+}
+.comunidad__input:focus{border-color:var(--p)}
+.comunidad__input::placeholder{color:rgba(0,0,0,.28)}
+.btn-purple{
+  background:var(--p);color:var(--wh);
+  font-size:.78rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;
+  padding:.8rem 1.9rem;border-radius:999px;border:none;
+  transition:background .3s,transform .25s;cursor:none;
+}
+.btn-purple:hover{background:var(--pd);transform:scale(1.03)}
+#comMsg{font-size:.8rem;color:var(--p);margin-top:.65rem;min-height:1em}
 
-  /* Each slide */
-  .slide {
-    flex: 0 0 100%;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    align-items: center;
-    min-height: 280px;
-    padding: 40px 50px 40px 56px;
-    gap: 24px;
-    border-radius: 20px;
-    overflow: hidden;
-  }
-  .slide-1 { background: var(--red); }
-  .slide-2 { background: var(--deep); }
-  .slide-3 { background: var(--mid); }
-  .slide-4 { background: #7A2040; }
-  .slide-5 { background: #2A4A7A; }
+.comunidad__visual{
+  display:grid;grid-template-columns:1fr 1fr;gap:.85rem;
+}
+.comunidad__photo{border-radius:12px;overflow:hidden;aspect-ratio:3/4}
+.comunidad__photo:nth-child(1){margin-top:2rem}
+.comunidad__photo:nth-child(3){grid-column:1/-1;aspect-ratio:16/7}
+.comunidad__photo img{width:100%;height:100%;object-fit:cover;transition:transform .7s var(--ease)}
+.comunidad__photo:hover img{transform:scale(1.05)}
+@media(max-width:768px){.comunidad__inner{grid-template-columns:1fr}.comunidad__visual{display:none}}
 
-  .slide-text {}
-  .slide-quote {
-    font-family: 'Fraunces', serif;
-    font-style: italic;
-    font-size: clamp(1.3rem, 2.5vw, 2rem);
-    font-weight: 700;
-    color: var(--white);
-    line-height: 1.25;
-  }
-  .slide-quote strong {
-    font-weight: 900;
-    font-style: italic;
-  }
+/* EVENTOS */
+.eventos{
+  background:var(--w);padding:clamp(3.5rem,7vw,6rem) 0;
+  position:relative;overflow:hidden;
+}
+.eventos__bg-num{
+  position:absolute;font-family:var(--serif);font-size:clamp(10rem,22vw,25rem);
+  font-weight:900;color:rgba(255,255,255,.05);right:-2%;bottom:-5%;
+  line-height:1;pointer-events:none;user-select:none;
+}
+.eventos__inner{
+  position:relative;z-index:1;max-width:1400px;margin:0 auto;
+  padding:0 clamp(1.5rem,5vw,4rem);
+  display:grid;grid-template-columns:1fr 1fr;gap:clamp(2.5rem,6vw,6rem);align-items:center;
+}
+.eventos__kicker{
+  font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;
+  color:rgba(255,255,255,.5);font-weight:500;
+  display:flex;align-items:center;gap:.7rem;margin-bottom:1.5rem;
+}
+.eventos__kicker::before{content:'';width:28px;height:1px;background:rgba(255,255,255,.38)}
+.eventos__title{
+  font-family:var(--serif);font-size:clamp(2.2rem,4.5vw,4.5rem);
+  font-weight:900;line-height:1;color:var(--wh);margin-bottom:1.25rem;
+}
+.eventos__title em{font-style:italic;color:var(--c)}
+.eventos__body{font-size:.9rem;color:rgba(255,255,255,.6);line-height:1.8;margin-bottom:2rem}
+.eventos__form{display:flex;gap:.7rem;flex-wrap:wrap}
+.eventos__input{
+  flex:1;min-width:190px;background:rgba(255,255,255,.1);
+  border:1px solid rgba(255,255,255,.22);border-radius:999px;
+  padding:.8rem 1.4rem;font-family:var(--sans);font-size:.88rem;
+  color:var(--wh);outline:none;transition:border-color .3s;
+}
+.eventos__input::placeholder{color:rgba(255,255,255,.38)}
+.eventos__input:focus{border-color:rgba(255,255,255,.65)}
+.btn-cream{
+  background:var(--c);color:var(--wd);
+  font-size:.78rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  padding:.8rem 1.9rem;border-radius:999px;border:none;
+  transition:background .3s,transform .25s;cursor:none;
+}
+.btn-cream:hover{background:var(--wh);transform:scale(1.03)}
+#evMsg{font-size:.8rem;color:rgba(255,255,255,.8);margin-top:.65rem;min-height:1em}
 
-  .slide-visual {
-    display: flex;
-    justify-content: flex-end;
-    align-items: flex-end;
-    overflow: hidden;
-  }
-  .slide-ilus {
-    width: 88%;
-    max-width: 340px;
-    object-fit: contain;
-    filter: drop-shadow(0 8px 20px rgba(0,0,0,.2));
-    transform: translateY(8px);
-  }
+.eventos__card{
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);
+  border-radius:18px;padding:2.5rem 2.25rem;text-align:center;backdrop-filter:blur(8px);
+}
+.eventos__card-icon{font-size:3.5rem;margin-bottom:1.25rem}
+.eventos__card-title{font-family:var(--serif);font-size:1.5rem;font-weight:900;color:var(--wh);margin-bottom:.75rem}
+.eventos__card-body{font-size:.88rem;color:rgba(255,255,255,.55);line-height:1.75}
+@media(max-width:768px){.eventos__inner{grid-template-columns:1fr}}
 
-  /* Dots + arrows */
-  .slider-controls {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 14px;
-    padding: 20px 0 4px;
-  }
-  .slider-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: #999;
-    font-size: 1.1rem;
-    padding: 4px 8px;
-    transition: color .2s;
-    display: flex;
-    align-items: center;
-  }
-  .slider-btn:hover { color: var(--deep); }
-  .slider-btn svg { width: 20px; height: 20px; }
+/* FOOTER */
+.footer{background:#07050F;padding:4rem 0 2rem}
+.footer__inner{max-width:1400px;margin:0 auto;padding:0 clamp(1.5rem,5vw,4rem)}
+.footer__top{
+  display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:2.5rem;
+  padding-bottom:3rem;border-bottom:1px solid rgba(255,255,255,.06);
+}
+.footer__brand-name{font-family:var(--serif);font-size:1.6rem;font-weight:900;color:var(--wh);margin-bottom:.85rem}
+.footer__brand-desc{font-size:.8rem;color:rgba(255,255,255,.3);line-height:1.7;max-width:260px;margin-bottom:1.75rem}
+.footer__socials{display:flex;gap:.65rem}
+.footer__soc{
+  width:36px;height:36px;border:1px solid rgba(255,255,255,.1);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;transition:border-color .3s,background .3s;
+}
+.footer__soc:hover{border-color:var(--w);background:rgba(183,53,74,.18)}
+.footer__soc svg{width:14px;height:14px;fill:rgba(255,255,255,.45)}
+.footer__col h4{font-size:.62rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.22);margin-bottom:1.1rem}
+.footer__col ul{list-style:none;display:flex;flex-direction:column;gap:.65rem}
+.footer__col a{font-size:.82rem;color:rgba(255,255,255,.4);transition:color .3s}
+.footer__col a:hover{color:var(--c)}
+.footer__bottom{
+  padding-top:1.75rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.75rem;
+}
+.footer__copy{font-size:.72rem;color:rgba(255,255,255,.18)}
+.footer__heart{color:var(--w)}
+@media(max-width:768px){.footer__top{grid-template-columns:1fr 1fr}.footer__top>:first-child{grid-column:1/-1}}
+@media(max-width:480px){.footer__top{grid-template-columns:1fr}}
 
-  .dots {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-  }
-  .dot {
-    width: 9px; height: 9px;
-    border-radius: 50%;
-    background: #ccc;
-    border: none;
-    cursor: pointer;
-    padding: 0;
-    transition: background .2s, transform .2s;
-  }
-  .dot.active {
-    background: var(--deep);
-    transform: scale(1.2);
-  }
-
-  /* ════════════════════════════════════════════════════════════
-     MANUAL (paper texture)
-  ════════════════════════════════════════════════════════════ */
-  #manual {
-    padding: 0;
-  }
-
-  .manual-hero {
-    display: grid;
-    grid-template-columns: 52% 48%;
-    align-items: center;
-    min-height: 540px;
-    max-width: 1160px;
-    margin: 0 auto;
-    padding: 60px 32px 50px;
-    gap: 20px;
-  }
-
-  .mh-left {}
-
-  .mh-title {
-    font-family: 'Fraunces', serif;
-    font-style: italic;
-    font-weight: 900;
-    font-size: clamp(3.8rem, 8.8vw, 7.2rem);
-    line-height: .92;
-    color: var(--dark);
-    letter-spacing: -.025em;
-    margin-bottom: 28px;
-  }
-
-  .mh-ctas { display: flex; gap: 12px; flex-wrap: wrap; }
-
-  .mh-right {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-
-  .mh-sub-block { padding: 0 0 22px 8px; }
-  .mh-sub-block .line1 {
-    font-family: 'Lato', sans-serif;
-    font-weight: 700;
-    font-size: clamp(.92rem,1.7vw,1.1rem);
-    color: var(--red);
-    display: block;
-    margin-bottom: 3px;
-  }
-  .mh-sub-block .line2 {
-    font-family: 'Lato', sans-serif;
-    font-size: clamp(.88rem,1.55vw,1rem);
-    color: var(--text);
-    line-height: 1.5;
-    display: block;
-  }
-  .mh-sub-block .days { font-weight: 700; color: var(--red); }
-
-  .mh-vis {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-  }
-  .mh-book {
-    width: 95%;
-    max-width: 460px;
-    z-index: 2;
-    position: relative;
-    filter: drop-shadow(0 10px 28px rgba(62,31,114,.18));
-  }
-  /* Arrows */
-  .mh-arrow { position:absolute; pointer-events:none; }
-  .arr-top  { top:-14px; left:0%; width:58%; }
-  .arr-bot  { bottom:-8px; left:10%; width:46%; transform:scaleX(-1) rotate(8deg); }
-  /* Stars */
-  .mh-star  { position:absolute; pointer-events:none; }
-  .str-tr   { top:-6px; right:2%; }
-  .str-br   { bottom:6%; right:8%; }
-
-  /* ── Chapters ─────────────────────────────────────────────── */
-  .chapters-wrap {
-    max-width: 1160px;
-    margin: 0 auto;
-    padding: 0 32px 52px;
-  }
-  .ch-hdr {
-    text-align: center;
-    margin-bottom: 42px;
-  }
-  .ch-hdr .chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-    font-family: 'Caveat', cursive;
-    font-size: 1.1rem;
-    color: var(--mid);
-    margin-bottom: 10px;
-  }
-  .ch-hdr h2 {
-    font-family: 'Fraunces', serif;
-    font-style: italic;
-    font-weight: 900;
-    font-size: clamp(1.8rem, 4vw, 3rem);
-    color: var(--dark);
-    line-height: 1;
-    margin-bottom: 8px;
-  }
-  .ch-hdr .sub { font-family:'Caveat',cursive; font-size:clamp(1.05rem,2vw,1.35rem); color:var(--red); margin-bottom:12px; }
-  .ch-hdr .desc { font-size:.98rem; color:var(--text); line-height:1.72; max-width:580px; margin:0 auto; }
-
-  .ch-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(224px, 1fr));
-    gap: 13px;
-    margin-bottom: 48px;
-  }
-  .ch-card {
-    background: var(--white);
-    border: 1.5px solid #DDD4EC;
-    border-radius: 14px;
-    padding: 20px 18px 16px;
-    position: relative;
-    overflow: hidden;
-    transition: transform .2s, box-shadow .2s;
-  }
-  .ch-card::before {
-    content:'';
-    position:absolute; top:0; left:0; right:0; height:3px;
-    background: linear-gradient(90deg, var(--deep), var(--mid));
-  }
-  .ch-card:hover { transform:translateY(-4px); box-shadow:0 10px 28px rgba(62,31,114,.12); }
-  .ch-num  { font-family:'Fraunces',serif; font-size:2rem; font-weight:900; color:#DDD4EC; line-height:1; margin-bottom:4px; }
-  .ch-icon { width:40px; height:40px; object-fit:contain; mix-blend-mode:multiply; margin-bottom:7px; }
-  .ch-cap  { font-family:'Caveat',cursive; font-size:.9rem; color:var(--mid); margin-bottom:2px; }
-  .ch-ttl  { font-family:'Lato',sans-serif; font-size:.86rem; font-weight:700; color:var(--dark); line-height:1.38; }
-
-  /* CTA Box */
-  .ch-cta-box {
-    background: var(--deep);
-    border-radius: 18px;
-    padding: 40px 36px;
-    text-align: center;
-    max-width: 620px;
-    margin: 0 auto;
-  }
-  .ch-cta-box h3 { font-family:'Fraunces',serif; font-style:italic; font-weight:900; font-size:1.65rem; color:var(--white); margin-bottom:6px; }
-  .ch-cta-box p  { font-family:'Caveat',cursive; font-size:1.1rem; color:var(--pale); margin-bottom:22px; }
-  .cta-row { display:flex; gap:10px; flex-wrap:wrap; }
-  .cta-row input { flex:1; min-width:120px; padding:13px 18px; border-radius:50px; border:none; font-family:'Lato',sans-serif; font-size:.92rem; background:rgba(255,255,255,.96); color:var(--dark); outline:none; }
-  .cta-row input:focus { box-shadow:0 0 0 3px rgba(200,184,224,.4); }
-  .form-ok { display:none; font-family:'Caveat',cursive; font-size:1.25rem; color:var(--pale); padding-top:12px; }
-
-  /* ════════════════════════════════════════════════════════════
-     EVENTOS
-  ════════════════════════════════════════════════════════════ */
-  #eventos {
-    background: var(--white);
-  }
-
-  .ev-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    min-height: 480px;
-    overflow: hidden;
-  }
-
-  .ev-text {
-    padding: 72px 56px 72px 48px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
-  .ev-label {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-family: 'Caveat', cursive;
-    font-size: 1.05rem;
-    color: var(--mid);
-    margin-bottom: 14px;
-  }
-  .ev-title {
-    font-family: 'Fraunces', serif;
-    font-weight: 900;
-    font-size: clamp(2rem, 4.5vw, 3.4rem);
-    color: var(--dark);
-    line-height: .97;
-    margin-bottom: 16px;
-  }
-  .ev-body  { font-size:1rem; color:var(--text); line-height:1.72; margin-bottom:3px; }
-  .ev-red   { font-size:1rem; font-weight:700; color:var(--red); margin-bottom:26px; }
-
-  .ev-form { display:flex; flex-direction:column; gap:11px; max-width:340px; }
-  .ev-form input {
-    padding: 14px 22px;
-    border-radius: 50px;
-    border: 2px solid #C8B8E0;
-    font-family: 'Lato', sans-serif;
-    font-size: .95rem;
-    background: var(--white);
-    color: var(--dark);
-    outline: none;
-    transition: border-color .2s, box-shadow .2s;
-  }
-  .ev-form input:focus { border-color:var(--mid); box-shadow:0 0 0 3px rgba(107,63,160,.12); }
-  .ev-form input::placeholder { color:#aaa; }
-  .ev-form .btn-purple { align-self:flex-start; }
-
-  /* Photo side with gradient fade */
-  .ev-photo {
-    position: relative;
-    overflow: hidden;
-  }
-  .ev-photo::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; bottom: 0;
-    width: 45%;
-    background: linear-gradient(to right, var(--white) 0%, transparent 100%);
-    z-index: 2;
-    pointer-events: none;
-  }
-  .ev-photo img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-    display: block;
-    filter: saturate(.85) brightness(.98);
-  }
-
-  /* ════════════════════════════════════════════════════════════
-     COMUNIDAD
-  ════════════════════════════════════════════════════════════ */
-  #comunidad {
-    background: var(--white);
-    border-top: 1px solid #f0edf6;
-  }
-
-  .com-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    min-height: 480px;
-    overflow: hidden;
-  }
-
-  .com-text {
-    padding: 72px 48px 72px 48px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
-  .com-title {
-    font-family: 'Fraunces', serif;
-    font-weight: 900;
-    font-size: clamp(1.4rem, 2.5vw, 2rem);
-    color: var(--deep);
-    margin-bottom: 12px;
-  }
-  .com-big {
-    font-family: 'Lato', sans-serif;
-    font-weight: 300;
-    font-size: clamp(1.6rem, 3.5vw, 2.5rem);
-    color: var(--dark);
-    line-height: 1.15;
-    margin-bottom: 14px;
-  }
-  .com-sub {
-    font-family: 'Lato', sans-serif;
-    font-size: .98rem;
-    color: var(--text);
-    line-height: 1.65;
-    max-width: 400px;
-    margin-bottom: 30px;
-  }
-
-  .soc-row { display:flex; gap:12px; flex-wrap:wrap; }
-  .soc-btn {
-    width: 46px; height: 46px;
-    border-radius: 50%;
-    border: 2px solid var(--mid);
-    color: var(--mid);
-    display: flex; align-items:center; justify-content:center;
-    transition: background .2s, color .2s, transform .2s;
-  }
-  .soc-btn:hover { background:var(--mid); color:var(--white); transform:translateY(-2px); }
-  .soc-btn svg { width:20px; height:20px; }
-
-  /* Photo side with gradient fade */
-  .com-photo {
-    position: relative;
-    overflow: hidden;
-  }
-  .com-photo::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; bottom: 0;
-    width: 45%;
-    background: linear-gradient(to right, var(--white) 0%, transparent 100%);
-    z-index: 2;
-    pointer-events: none;
-  }
-  .com-photo img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-    display: block;
-    filter: saturate(.85) brightness(.98);
-  }
-
-  /* ════════════════════════════════════════════════════════════
-     FOOTER
-  ════════════════════════════════════════════════════════════ */
-  footer {
-    background: var(--deep);
-    padding: 44px 24px 32px;
-    text-align: center;
-  }
-  footer img {
-    width: 58px; height: 58px;
-    object-fit: contain;
-    margin: 0 auto 10px;
-    filter: brightness(0) invert(1);
-  }
-  footer p {
-    font-family: 'Lato', sans-serif;
-    font-size: .84rem;
-    color: rgba(255,255,255,.45);
-    letter-spacing: .04em;
-  }
-
-  /* ════════════════════════════════════════════════════════════
-     RESPONSIVE
-  ════════════════════════════════════════════════════════════ */
-  @media (max-width: 820px) {
-    .nav-links { display:none; }
-    .nav-links.open {
-      display:flex; flex-direction:column;
-      position:fixed; top:78px; left:0; right:0;
-      background:var(--nav); padding:24px 32px; gap:18px;
-    }
-    .nav-links li + li::before { display:none; }
-    .nav-toggle { display:flex; }
-
-    .slide { grid-template-columns:1fr; min-height:220px; padding:32px 28px; }
-    .slide-visual { display:none; }
-
-    .manual-hero { grid-template-columns:1fr; padding:44px 24px 36px; }
-    .mh-right { order:-1; }
-    .mh-vis { justify-content:center; margin-bottom:24px; }
-    .mh-book { width:55%; max-width:240px; }
-    .arr-top, .arr-bot { display:none; }
-    .mh-ctas { justify-content:center; }
-    .mh-title { text-align:center; }
-
-    .ch-grid { grid-template-columns:1fr 1fr; }
-    .cta-row { flex-direction:column; }
-
-    .ev-grid, .com-grid { grid-template-columns:1fr; }
-    .ev-photo, .com-photo { min-height:280px; }
-    .ev-photo::before, .com-photo::before { width:30%; }
-    .ev-text, .com-text { padding:44px 28px; }
-    .ev-form { max-width:100%; }
-  }
-
-  @media (max-width: 480px) {
-    .mh-title { font-size:3.6rem; }
-    .ch-grid { grid-template-columns:1fr; }
-    .ch-cta-box { padding:28px 20px; }
-    .ev-title { font-size:2.2rem; }
-  }
+/* REVEAL */
+[data-r]{opacity:0;transform:translateY(40px);transition:opacity .85s var(--ease),transform .85s var(--ease)}
+[data-r].in{opacity:1;transform:none}
+[data-r-l]{opacity:0;transform:translateX(-50px);transition:opacity .85s var(--ease),transform .85s var(--ease)}
+[data-r-l].in{opacity:1;transform:none}
+[data-r-r]{opacity:0;transform:translateX(50px);transition:opacity .85s var(--ease),transform .85s var(--ease)}
+[data-r-r].in{opacity:1;transform:none}
+[data-delay='1']{transition-delay:.1s}[data-delay='2']{transition-delay:.2s}
+[data-delay='3']{transition-delay:.3s}[data-delay='4']{transition-delay:.4s}
+[data-delay='5']{transition-delay:.5s}[data-delay='6']{transition-delay:.6s}
   </style>
 </head>
 <body>
 
-<!-- ══════════════════ NAV ═════════════════════════════════ -->
-<nav id="navbar">
-  <div class="nav-inner">
-    <a href="#slider-section" class="nav-logo">
-      <img src="assets/logo/Logo vinoso.png" alt="Vinoso"/>
-      <span>vinoso</span>
-    </a>
-    <ul class="nav-links" id="navLinks">
-      <li><a href="#manual">manual del vino</a></li>
-      <li><a href="#eventos">eventos</a></li>
-      <li><a href="#nosotros">nosotros</a></li>
-      <li><a href="#comunidad">comunidad</a></li>
+<div id="cursor"></div>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav__in">
+    <a href="#" class="nav__logo">Vinoso</a>
+    <ul class="nav__links">
+      <li><a href="#about">Nosotros</a></li>
+      <li><a href="#manual">Manual</a></li>
+      <li><a href="#vinos">Vinos</a></li>
+      <li><a href="#comunidad">Comunidad</a></li>
+      <li><a href="#eventos">Eventos</a></li>
     </ul>
-    <button class="nav-toggle" id="navToggle" aria-label="Menú">
+    <a href="#manual" class="nav__btn">El Manual →</a>
+    <button class="nav__menu-btn" id="menuBtn" aria-label="Menú">
       <span></span><span></span><span></span>
     </button>
   </div>
 </nav>
 
+<div class="mobile-nav" id="mobileNav">
+  <button class="mobile-nav__close" id="menuClose">✕</button>
+  <a href="#about">Nosotros</a>
+  <a href="#manual">Manual</a>
+  <a href="#vinos">Vinos</a>
+  <a href="#comunidad">Comunidad</a>
+  <a href="#eventos">Eventos</a>
+</div>
 
-<!-- ══════════════════ HERO SLIDER ═════════════════════════ -->
-<section id="slider-section">
-  <div class="slider-wrapper">
-
-    <div class="slider-viewport">
-      <div class="slider-track" id="sliderTrack">
-
-        <!-- Slide 1 — Red / Quote principal -->
-        <div class="slide slide-1">
-          <div class="slide-text">
-            <p class="slide-quote">
-              "El vino no es para expertos…<br>
-              <strong>Es para quienes deciden disfrutarlo."</strong>
-            </p>
-          </div>
-          <div class="slide-visual">
-            <img class="slide-ilus"
-                 src="assets/ilustraciones/ilustracion 1.png"
-                 alt="Brindando juntos"/>
-          </div>
-        </div>
-
-        <!-- Slide 2 — Purple / Anti-snob -->
-        <div class="slide slide-2">
-          <div class="slide-text">
-            <p class="slide-quote">
-              "El vino no es complicado.<br>
-              <strong>Lo complicado es cómo nos lo explicaron."</strong>
-            </p>
-          </div>
-          <div class="slide-visual">
-            <img class="slide-ilus"
-                 src="assets/ilustraciones/ilustracion 9.png"
-                 alt="Manual anti-snob del vino"/>
-          </div>
-        </div>
-
-        <!-- Slide 3 — Mid purple / Manual -->
-        <div class="slide slide-3">
-          <div class="slide-text">
-            <p class="slide-quote">
-              "Manual Anti-snob del Vino —<br>
-              <strong>15 días para entender, elegir y disfrutar."</strong>
-            </p>
-          </div>
-          <div class="slide-visual">
-            <img class="slide-ilus"
-                 src="assets/ilustraciones/ilustracion 7.png"
-                 alt="Cata de vino"/>
-          </div>
-        </div>
-
-        <!-- Slide 4 — Burgundy / Eventos -->
-        <div class="slide slide-4">
-          <div class="slide-text">
-            <p class="slide-quote">
-              "Eventos &amp; Catas —<br>
-              <strong>experiencias para que el vino deje de ser territorio ajeno."</strong>
-            </p>
-          </div>
-          <div class="slide-visual">
-            <img class="slide-ilus"
-                 src="assets/ilustraciones/ilustracion 5.png"
-                 alt="Amigos brindando"/>
-          </div>
-        </div>
-
-        <!-- Slide 5 — Blue-purple / Comunidad -->
-        <div class="slide slide-5">
-          <div class="slide-text">
-            <p class="slide-quote">
-              "Únete a la comunidad —<br>
-              <strong>comparte, aprende y disfruta sin pretensiones."</strong>
-            </p>
-          </div>
-          <div class="slide-visual">
-            <img class="slide-ilus"
-                 src="assets/ilustraciones/ilustracion 12.png"
-                 alt="Comunidad vinoso"/>
-          </div>
-        </div>
-
-      </div><!-- /track -->
-    </div><!-- /viewport -->
-
-    <!-- Controls -->
-    <div class="slider-controls">
-      <button class="slider-btn" id="prevBtn" aria-label="Anterior">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="15 18 9 12 15 6"/>
-        </svg>
-      </button>
-      <div class="dots" id="dots">
-        <button class="dot active" data-i="0"></button>
-        <button class="dot" data-i="1"></button>
-        <button class="dot" data-i="2"></button>
-        <button class="dot" data-i="3"></button>
-        <button class="dot" data-i="4"></button>
-      </div>
-      <button class="slider-btn" id="nextBtn" aria-label="Siguiente">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="9 18 15 12 9 6"/>
-        </svg>
-      </button>
+<!-- HERO -->
+<section class="hero">
+  <div class="hero__bg"></div>
+  <div class="hero__gradient"></div>
+  <div class="hero__content">
+    <div class="hero__eyebrow">
+      <div class="hero__eyebrow-line"></div>
+      <span class="hero__eyebrow-text">vinoso.mx — vino auténtico</span>
     </div>
-
+    <h1 class="hero__title">
+      El vino<br/>
+      es para <em>vivirlo,</em><br/>
+      no para <span class="accent">temerlo.</span>
+    </h1>
+    <div class="hero__bottom">
+      <p class="hero__desc">Vinos auténticos, comunidad real y una forma diferente de disfrutar la copa.</p>
+      <div class="hero__actions">
+        <a href="#manual" class="btn-wine">Manual Anti-Snob</a>
+        <a href="#comunidad" class="btn-outline-light">Únete</a>
+      </div>
+    </div>
+  </div>
+  <div class="hero__footer">
+    <div class="hero__scroll-hint">
+      <div class="hero__scroll-dot"></div>
+      <span>Explorar</span>
+    </div>
+    <span class="hero__tagline">"El vino como puente entre personas, historias y culturas."</span>
   </div>
 </section>
 
-
-<!-- ══════════════════ MANUAL ══════════════════════════════ -->
-<section id="manual" class="paper">
-  <div class="manual-hero">
-
-    <!-- Left: giant title + buttons -->
-    <div class="mh-left fade">
-      <h1 class="mh-title">Manual<br>anti-snob<br>del vino</h1>
-      <div class="mh-ctas">
-        <a href="#manual" class="btn btn-lavender">compra el manual</a>
-        <a href="#manual" class="btn btn-purple">conoce los temas</a>
-      </div>
-    </div>
-
-    <!-- Right: subtitle + book illustration with arrows -->
-    <div class="mh-right fade" style="transition-delay:.12s">
-      <div class="mh-sub-block">
-        <span class="line1">Entiende, elige y disfruta</span>
-        <span class="line2">el vino con seguridad</span>
-        <span class="line2">en <span class="days">15 días</span></span>
-      </div>
-      <div class="mh-vis">
-        <img class="mh-book" src="assets/ilustraciones/ilustracion 9.png" alt="Manual anti-snob del vino"/>
-      </div>
-    </div>
-
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div class="about__img-side" data-r-l>
+    <img src="https://images.unsplash.com/photo-1474631245212-32dc3c8310c6?auto=format&fit=crop&w=900&q=85" alt="Viñedo" class="about__img"/>
+    <div class="about__img-overlay"></div>
   </div>
-
+  <div class="about__text-side" data-r-r>
+    <span class="about__kicker">Nuestra filosofía</span>
+    <h2 class="about__title">
+      El vino no debería<br/>
+      intimidar a <em>nadie.</em>
+    </h2>
+    <blockquote class="about__quote">
+      "Creemos en el vino como un puente entre personas, historias y culturas."
+    </blockquote>
+  </div>
 </section>
 
+<!-- PILLARS -->
+<section class="pillars" id="pillars">
+  <div class="pillars__header">
+    <h2 class="pillars__title" data-r-l>
+      Vinoso es más<br/>que una <em>marca.</em>
+    </h2>
+    <p class="pillars__sub" data-r-r>
+      Una plataforma para crear, co-crear y convivir alrededor del vino.
+    </p>
+  </div>
+  <div class="pillars__scroll">
+    <div class="pcard" data-r data-delay="1">
+      <div class="pcard__num">01</div>
+      <div class="pcard__icon">🍷</div>
+      <h3 class="pcard__title">Vinos auténticos</h3>
+      <p class="pcard__text">Solo bodegas independientes. Vinos con historia real y terroir genuino.</p>
+    </div>
+    <div class="pcard" data-r data-delay="2">
+      <div class="pcard__num">02</div>
+      <div class="pcard__icon">🎉</div>
+      <h3 class="pcard__title">Eventos & convivios</h3>
+      <p class="pcard__text">El vino es el pretexto. La gente es el motivo.</p>
+    </div>
+    <div class="pcard" data-r data-delay="3">
+      <div class="pcard__num">03</div>
+      <div class="pcard__icon">📖</div>
+      <h3 class="pcard__title">Sin snobismo</h3>
+      <p class="pcard__text">Conocimiento vinícola de forma divertida, directa y sin rollos.</p>
+    </div>
+    <div class="pcard" data-r data-delay="4">
+      <div class="pcard__num">04</div>
+      <div class="pcard__icon">🤝</div>
+      <h3 class="pcard__title">Co-crear</h3>
+      <p class="pcard__text">Construimos con la comunidad, no solo para ella.</p>
+    </div>
+    <div class="pcard" data-r data-delay="5">
+      <div class="pcard__num">05</div>
+      <div class="pcard__icon">🌍</div>
+      <h3 class="pcard__title">Cultura del vino</h3>
+      <p class="pcard__text">Cada botella es geografía, historia y personas.</p>
+    </div>
+    <div class="pcard" data-r data-delay="6">
+      <div class="pcard__num">06</div>
+      <div class="pcard__icon">✨</div>
+      <h3 class="pcard__title">Tu estilo propio</h3>
+      <p class="pcard__text">No hay una sola forma correcta de disfrutar el vino.</p>
+    </div>
+  </div>
+</section>
 
-<!-- ══════════════════ EVENTOS ══════════════════════════════ -->
-<section id="eventos">
-  <div class="ev-grid">
+<!-- MANUAL -->
+<section class="manual" id="manual">
+  <div class="manual__bg-text">Anti-Snob</div>
+  <div class="manual__inner">
+    <div data-r-l>
+      <span class="manual__kicker">Ya disponible</span>
+      <h2 class="manual__title">
+        Manual
+        <span>Anti-Snob</span>
+        del Vino
+      </h2>
+      <p class="manual__desc">Para disfrutar el vino sin necesitar un doctorado ni fingir que sabes.</p>
+      <ul class="manual__list">
+        <li>Cómo elegir un buen vino sin perderte</li>
+        <li>Leer etiquetas sin morir en el intento</li>
+        <li>Maridajes simples que funcionan</li>
+        <li>Glosario anti-pretensioso</li>
+        <li>Regiones vinícolas de México y el mundo</li>
+        <li>204 páginas sin complicaciones</li>
+      </ul>
+      <a href="https://vinoso.mx" target="_blank" rel="noopener" class="btn-wine">Consíguelo en vinoso.mx →</a>
+    </div>
+    <div class="manual__book-scene" data-r-r>
+      <div class="manual__book">
+        <div class="manual__book-front">
+          <span class="manual__book-badge2">2026 Edition</span>
+          <div class="manual__book-ttl">
+            <h3>Manual Anti-Snob del Vino</h3>
+            <p>Todo lo que necesitas para disfrutar el vino sin pretensiones.</p>
+          </div>
+          <span class="manual__book-brand">VINOSO</span>
+          <div class="manual__book-deco"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <div class="ev-text fade">
-      <p class="ev-label">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-          <line x1="12" y1="2"  x2="12" y2="22" stroke="#6B3FA0" stroke-width="2.2" stroke-linecap="round"/>
-          <line x1="2"  y1="12" x2="22" y2="12" stroke="#6B3FA0" stroke-width="2.2" stroke-linecap="round"/>
-          <line x1="4.9" y1="4.9" x2="19.1" y2="19.1" stroke="#6B3FA0" stroke-width="2.2" stroke-linecap="round"/>
-          <line x1="19.1" y1="4.9" x2="4.9" y2="19.1" stroke="#6B3FA0" stroke-width="2.2" stroke-linecap="round"/>
-        </svg>
-        próximamente
+<!-- VINOS -->
+<section class="vinos" id="vinos">
+  <div class="vinos__header">
+    <div class="vinos__kicker" data-r>Selección Vinoso</div>
+    <h2 class="vinos__title" data-r>
+      Vinos con historia,<br/>
+      <em>sin el teatro.</em>
+    </h2>
+  </div>
+  <div class="vinos__grid">
+    <div class="vcard" data-r data-delay="1">
+      <div class="vcard__img-wrap">
+        <img src="https://images.unsplash.com/photo-1553361371-9b22f78e8b1d?auto=format&fit=crop&w=700&q=80" alt="Vino tinto Baja" class="vcard__img"/>
+      </div>
+      <div class="vcard__body">
+        <p class="vcard__region">Valle de Guadalupe · Baja California</p>
+        <h3 class="vcard__name">Tintos del Valle</h3>
+        <p class="vcard__desc">Tempranillo con notas de fruta madura. Tres generaciones de familia vinícola.</p>
+      </div>
+    </div>
+    <div class="vcard" data-r data-delay="2">
+      <div class="vcard__img-wrap">
+        <img src="https://images.unsplash.com/photo-1567529684892-b97a9e1df3c3?auto=format&fit=crop&w=700&q=80" alt="Vino rosado Querétaro" class="vcard__img"/>
+      </div>
+      <div class="vcard__body">
+        <p class="vcard__region">Querétaro · 1,850 msnm</p>
+        <h3 class="vcard__name">Rosados de Altitude</h3>
+        <p class="vcard__desc">Acidez vibrante y elegancia. La altura hace la diferencia.</p>
+      </div>
+    </div>
+    <div class="vcard" data-r data-delay="3">
+      <div class="vcard__img-wrap">
+        <img src="https://images.unsplash.com/photo-1528605248644-7c86249ec4af?auto=format&fit=crop&w=700&q=80" alt="Convivio de vino" class="vcard__img"/>
+      </div>
+      <div class="vcard__body">
+        <p class="vcard__region">Coahuila · Desierto mexicano</p>
+        <h3 class="vcard__name">Blancos del Desierto</h3>
+        <p class="vcard__desc">Mineralidad sorprendente del contraste extremo entre día y noche.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMUNIDAD -->
+<section class="comunidad" id="comunidad">
+  <div class="comunidad__inner">
+    <div data-r-l>
+      <span class="comunidad__kicker">Únete</span>
+      <h2 class="comunidad__title">
+        El vino sabe mejor<br/>cuando lo <em>compartes.</em>
+      </h2>
+      <p class="comunidad__body">
+        Sé parte desde el principio. Trae tus recomendaciones, participa en los convivios, co-crea lo que Vinoso va a ser.<br/><br/>
+        Solo tu correo. Sin spam.
       </p>
-      <h2 class="ev-title">Eventos<br>&amp; Catas</h2>
-      <p class="ev-body">Estamos preparando experiencias para que el vino deje de ser un territorio ajeno.</p>
-      <p class="ev-red">Regístrate y sé el primero en enterarte.</p>
-      <form class="ev-form" id="formEv" onsubmit="handleForm(event,'okEv')">
-        <input type="email" placeholder="Tu correo" required/>
-        <button type="submit" class="btn btn-purple">Avísame</button>
-        <p class="form-ok" id="okEv" style="color:var(--mid)">¡Apuntado! 🍇 Te avisamos pronto.</p>
+      <form class="comunidad__form" onsubmit="handleCom(event)">
+        <input type="email" required placeholder="tu@correo.com" class="comunidad__input" id="comEmail"/>
+        <button type="submit" class="btn-purple">Quiero ser parte</button>
       </form>
+      <p id="comMsg"></p>
     </div>
-
-    <div class="ev-photo fade" style="transition-delay:.15s">
-      <img src="assets/ilustraciones/ilustracion 5.png" alt="Amigos en evento de vino"/>
-    </div>
-
-  </div>
-</section>
-
-
-<!-- ══════════════════ COMUNIDAD ════════════════════════════ -->
-<section id="nosotros" style="background:var(--white)">
-  <div id="comunidad" class="com-grid">
-
-    <div class="com-text fade">
-      <h2 class="com-title">Únete a la comunidad</h2>
-      <p class="com-big">Comparte, aprende<br>y disfruta.</p>
-      <p class="com-sub">Una comunidad que cree que el mejor vino es el que te gusta a ti.</p>
-      <div class="soc-row">
-        <a href="#" class="soc-btn" aria-label="Facebook">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
-        </a>
-        <a href="#" class="soc-btn" aria-label="LinkedIn">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
-        </a>
-        <a href="#" class="soc-btn" aria-label="Instagram">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
-        </a>
-        <a href="#" class="soc-btn" aria-label="WhatsApp">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.962-1.401A9.955 9.955 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18a7.95 7.95 0 0 1-4.054-1.107l-.29-.173-3.003.848.862-2.928-.19-.3A7.96 7.96 0 0 1 4 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8z"/></svg>
-        </a>
+    <div class="comunidad__visual" data-r-r>
+      <div class="comunidad__photo">
+        <img src="https://images.unsplash.com/photo-1528605248644-7c86249ec4af?auto=format&fit=crop&w=600&q=80" alt="Amigos con vino"/>
+      </div>
+      <div class="comunidad__photo">
+        <img src="https://images.unsplash.com/photo-1510812431-3f30d695191a?auto=format&fit=crop&w=600&q=80" alt="Copas de vino"/>
+      </div>
+      <div class="comunidad__photo">
+        <img src="https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?auto=format&fit=crop&w=1200&q=80" alt="Viñedo"/>
       </div>
     </div>
-
-    <div class="com-photo fade" style="transition-delay:.15s">
-      <img src="assets/ilustraciones/ilustracion 1.png" alt="Comunidad vinoso"/>
-    </div>
-
   </div>
 </section>
 
+<!-- EVENTOS -->
+<section class="eventos" id="eventos">
+  <div class="eventos__bg-num">01</div>
+  <div class="eventos__inner">
+    <div data-r-l>
+      <span class="eventos__kicker">Próximamente</span>
+      <h2 class="eventos__title">
+        Eventos &<br/><em>convivios</em>
+      </h2>
+      <p class="eventos__body">El primer evento Vinoso está en camino. Sé el primero en saberlo.</p>
+      <form class="eventos__form" onsubmit="handleEv(event)">
+        <input type="email" required placeholder="tu@correo.com" class="eventos__input" id="evEmail"/>
+        <button type="submit" class="btn-cream">Avisarme →</button>
+      </form>
+      <p id="evMsg"></p>
+    </div>
+    <div class="eventos__card" data-r-r>
+      <div class="eventos__card-icon">🍾</div>
+      <h3 class="eventos__card-title">El primer convivio<br/>se acerca</h3>
+      <p class="eventos__card-body">Catas verticales, bodegas sorpresa, gente que comparte el amor por el vino.</p>
+    </div>
+  </div>
+</section>
 
-<!-- ══════════════════ FOOTER ═══════════════════════════════ -->
-<footer>
-  <img src="assets/logo/Logo vinoso.png" alt="Vinoso"/>
-  <p>© 2025 Vinoso &middot; vinoso.mx &middot; Hecho en México.</p>
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer__inner">
+    <div class="footer__top">
+      <div>
+        <p class="footer__brand-name">Vinoso</p>
+        <p class="footer__brand-desc">Acercamos vinos auténticos de bodegas independientes a quienes disfrutan descubrir, aprender y compartir una copa con estilo.</p>
+        <div class="footer__socials">
+          <a href="https://instagram.com/vinoso.mx" target="_blank" rel="noopener" class="footer__soc" aria-label="Instagram">
+            <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+          </a>
+          <a href="https://tiktok.com/@vinoso.mx" target="_blank" rel="noopener" class="footer__soc" aria-label="TikTok">
+            <svg viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V9.03a8.16 8.16 0 004.77 1.52V7.1a4.85 4.85 0 01-1-.41z"/></svg>
+          </a>
+        </div>
+      </div>
+      <div class="footer__col">
+        <h4>Vinoso</h4>
+        <ul>
+          <li><a href="#about">Nosotros</a></li>
+          <li><a href="#vinos">Vinos</a></li>
+          <li><a href="#eventos">Eventos</a></li>
+          <li><a href="#comunidad">Comunidad</a></li>
+        </ul>
+      </div>
+      <div class="footer__col">
+        <h4>El Manual</h4>
+        <ul>
+          <li><a href="#manual">Qué incluye</a></li>
+          <li><a href="https://vinoso.mx" target="_blank" rel="noopener">Comprarlo</a></li>
+        </ul>
+      </div>
+      <div class="footer__col">
+        <h4>Contacto</h4>
+        <ul>
+          <li><a href="mailto:hola@vinoso.mx">hola@vinoso.mx</a></li>
+          <li><a href="https://vinoso.mx" target="_blank" rel="noopener">vinoso.mx</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <p class="footer__copy">© 2026 Vinoso · Hecho con <span class="footer__heart">♥</span> en México</p>
+      <p class="footer__copy">El vino une personas, historias y culturas.</p>
+    </div>
+  </div>
 </footer>
 
-
-<!-- ══════════════════ JS ════════════════════════════════════ -->
 <script>
-  /* Nav */
-  const nav = document.getElementById('navbar');
-  window.addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 8));
+/* Cursor */
+const cur=document.getElementById('cursor');
+let mx=0,my=0,cx=0,cy=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});
+(function loop(){cx+=(mx-cx)*.12;cy+=(my-cy)*.12;cur.style.left=cx+'px';cur.style.top=cy+'px';requestAnimationFrame(loop)})();
+document.querySelectorAll('a,button,.vcard,.pcard,.comunidad__photo').forEach(el=>{
+  el.addEventListener('mouseenter',()=>cur.classList.add('big'));
+  el.addEventListener('mouseleave',()=>cur.classList.remove('big'));
+});
 
-  const tog  = document.getElementById('navToggle');
-  const menu = document.getElementById('navLinks');
-  tog.addEventListener('click', () => menu.classList.toggle('open'));
-  menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => menu.classList.remove('open')));
+/* Mobile nav */
+const nav=document.getElementById('mobileNav');
+document.getElementById('menuBtn').addEventListener('click',()=>nav.classList.add('on'));
+document.getElementById('menuClose').addEventListener('click',()=>nav.classList.remove('on'));
+nav.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>nav.classList.remove('on')));
 
-  /* Fade in */
-  const io = new IntersectionObserver(es => {
-    es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
-  }, { threshold: .1 });
-  document.querySelectorAll('.fade').forEach(el => io.observe(el));
+/* Reveal */
+const io=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}});
+},{threshold:.1,rootMargin:'0px 0px -50px 0px'});
+document.querySelectorAll('[data-r],[data-r-l],[data-r-r]').forEach(el=>io.observe(el));
 
-  /* Slider */
-  const track  = document.getElementById('sliderTrack');
-  const dots   = document.querySelectorAll('.dot');
-  let cur = 0;
-  const total = 5;
-  let autoTimer;
-
-  function goTo(n) {
-    cur = (n + total) % total;
-    track.style.transform = `translateX(-${cur * 100}%)`;
-    dots.forEach((d, i) => d.classList.toggle('active', i === cur));
-  }
-
-  document.getElementById('prevBtn').addEventListener('click', () => { goTo(cur - 1); resetAuto(); });
-  document.getElementById('nextBtn').addEventListener('click', () => { goTo(cur + 1); resetAuto(); });
-  dots.forEach(d => d.addEventListener('click', () => { goTo(+d.dataset.i); resetAuto(); }));
-
-  function resetAuto() { clearInterval(autoTimer); autoTimer = setInterval(() => goTo(cur + 1), 5000); }
-  autoTimer = setInterval(() => goTo(cur + 1), 5000);
-
-  /* Forms */
-  function handleForm(e, id) {
-    e.preventDefault();
-    e.target.style.display = 'none';
-    document.getElementById(id).style.display = 'block';
-  }
+/* Forms */
+function handleCom(e){
+  e.preventDefault();
+  document.getElementById('comMsg').textContent='¡Listo! Ya eres parte de Vinoso. 🍷';
+  document.getElementById('comEmail').value='';
+}
+function handleEv(e){
+  e.preventDefault();
+  document.getElementById('evMsg').textContent='¡Te avisamos en cuanto haya evento! 🎉';
+  document.getElementById('evEmail').value='';
+}
 </script>
 </body>
 </html>
